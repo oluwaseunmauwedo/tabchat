@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useAction } from "convex/react";
+import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function Page() {
   const [prompt, setPrompt] = useState("");
-  const [generatedImage, setGeneratedImage] = useState<string[] | null>(null);
+  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const generateImage = useAction(api.images.generate.generate);
+  const generateImage = useMutation(api.images.generate.scheduleImageGeneration);
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
@@ -88,7 +88,7 @@ export default function Page() {
           {generatedImage && (
             <>
               <motion.img
-                src={`data:image/png;base64,${generatedImage[0]}`}
+                src={`data:image/png;base64,${generatedImage}`}
                 alt="AI Generated"
                 className="max-w-full max-h-[600px] rounded-2xl shadow-xl hover:scale-105 transition-transform cursor-pointer"
                 initial={{ opacity: 0 }}
@@ -98,7 +98,7 @@ export default function Page() {
                 <button
                   onClick={() => {
                     const link = document.createElement("a");
-                    link.href = `data:image/png;base64,${generatedImage[0]}`;
+                    link.href = `data:image/png;base64,${generatedImage}`;
                     link.download = "generated-image.png";
                     link.click();
                   }}

@@ -9,6 +9,7 @@ export default defineSchema({
     imageWidth: v.number(),
     imageHeight: v.number(),
     numberOfImages: v.number(),
-    key: v.string(),
+    isGenerated: v.boolean(),
+    createdAt: v.number(),
   })
 })
