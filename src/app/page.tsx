@@ -1,103 +1,116 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { useAction } from "convex/react";
+import { api } from "../../convex/_generated/api";
+
+export default function Page() {
+  const [prompt, setPrompt] = useState("");
+  const [generatedImage, setGeneratedImage] = useState<string[] | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const generateImage = useAction(api.images.generate.generate);
+
+  const handleGenerate = async () => {
+    if (!prompt.trim()) return;
+    setIsGenerating(true);
+    try {
+      const base64Image = await generateImage({ prompt: prompt.trim(), model: "dall-e-3", imageWidth: 1024, imageHeight: 1024, numberOfImages: 1 });
+      setGeneratedImage(base64Image);
+    } catch (error) {
+      console.error("Error generating image:", error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-8">
+      <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        
+        {/* Left Panel - Prompt Input */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="backdrop-blur-2xl bg-white/10 p-8 rounded-3xl shadow-2xl border border-white/20"
+        >
+          <h1 className="text-4xl font-extrabold text-white mb-6">
+            AI Image Studio
+          </h1>
+          <p className="text-gray-300 mb-6 text-lg">
+            Describe your dream image and let AI bring it to life. 
+          </p>
+          
+          <textarea
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            placeholder="E.g. A cyberpunk cat wearing sunglasses on a neon-lit rooftop..."
+            rows={4}
+            className="w-full resize-none px-4 py-3 rounded-2xl border border-gray-500/40 bg-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all mb-6"
+            disabled={isGenerating}
+          />
+          
+          <button
+            onClick={handleGenerate}
+            disabled={isGenerating || !prompt.trim()}
+            className="w-full py-4 rounded-2xl bg-blue-600 text-white font-semibold text-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:scale-105"
+          >
+            {isGenerating ? "Generating..." : "Generate Image"}
+          </button>
+        </motion.div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        {/* Right Panel - Image Preview */}
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="backdrop-blur-2xl bg-white/10 rounded-3xl shadow-2xl border border-white/20 flex flex-col items-center justify-center p-6 relative"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          {!generatedImage && !isGenerating && (
+            <p className="text-gray-400 text-center">
+              Your image will appear here once generated
+            </p>
+          )}
+
+          {isGenerating && (
+            <div className="flex flex-col items-center">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 1 }}
+                className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full"
+              />
+              <p className="mt-4 text-gray-300 text-lg">Generating your masterpiece...</p>
+            </div>
+          )}
+
+          {generatedImage && (
+            <>
+              <motion.img
+                src={`data:image/png;base64,${generatedImage[0]}`}
+                alt="AI Generated"
+                className="max-w-full max-h-[600px] rounded-2xl shadow-xl hover:scale-105 transition-transform cursor-pointer"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+              />
+              <div className="mt-6 text-center">
+                <button
+                  onClick={() => {
+                    const link = document.createElement("a");
+                    link.href = `data:image/png;base64,${generatedImage[0]}`;
+                    link.download = "generated-image.png";
+                    link.click();
+                  }}
+                  className="px-6 py-3 rounded-xl bg-green-600 text-white font-medium hover:bg-green-700 transition-all shadow-lg hover:scale-105"
+                >
+                  Download Image
+                </button>
+              </div>
+            </>
+          )}
+        </motion.div>
+      </div>
     </div>
   );
 }
