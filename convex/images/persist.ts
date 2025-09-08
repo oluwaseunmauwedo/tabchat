@@ -8,13 +8,13 @@ export const saveGeneratedImage = mutation({
         imageWidth: v.number(),
         imageHeight: v.number(),
         numberOfImages: v.number(),
-        storageId: v.id("_storage"),
-        url : v.string(),
-        jobId: v.optional(v.id("jobs")),
+        storageId: v.optional(v.id("_storage")),
+        body: v.optional(v.string()),
+        originalImageId: v.optional(v.string()),
         status: v.union(v.literal("pending"), v.literal("generated"), v.literal("failed") , v.literal("running"))
     },
     handler: async (ctx, args) => {
-        const { prompt, model, imageWidth, imageHeight, numberOfImages, status, storageId, url, jobId } = args;
+        const { prompt, model, imageWidth, imageHeight, numberOfImages, status, storageId, body } = args;
 
         const generatedImageId = await ctx.db.insert("images", {
             prompt: prompt,
@@ -23,11 +23,9 @@ export const saveGeneratedImage = mutation({
             imageHeight: imageHeight,
             numberOfImages: numberOfImages,
             storageId: storageId,
-            url: url,
             createdAt: Date.now(),
-            jobId: jobId,
-            creationTime: Date.now(),
             status: status,
+            body: body,
         });
         return generatedImageId;
     },
@@ -41,12 +39,11 @@ export const updateImageStatus = mutation({
         imageWidth: v.number(),
         imageHeight: v.number(),
         numberOfImages: v.number(),
+        body: v.optional(v.string()),
         storageId: v.optional(v.id("_storage")),
-        url : v.optional(v.string()),
-        jobId: v.optional(v.id("jobs")),
         status: v.union(v.literal("pending"), v.literal("generated"), v.literal("failed") , v.literal("running")) ,
     } , handler : async (ctx, args) => {
-        const { prompt, model, imageWidth, status,  imageHeight, numberOfImages, storageId, url, jobId } = args;
+        const { prompt, model, imageWidth, status,  imageHeight, numberOfImages, storageId, body } = args;
 
         const generatedImageId = await ctx.db.insert("images", {
             prompt: prompt,
@@ -55,10 +52,8 @@ export const updateImageStatus = mutation({
             imageHeight: imageHeight,
             numberOfImages: numberOfImages,
             storageId: storageId,
-            url: url,
+            body: body,
             createdAt: Date.now(),
-            jobId: jobId,
-            creationTime: Date.now(),
             status: status,
         });
         return generatedImageId;

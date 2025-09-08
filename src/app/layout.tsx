@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { Sidepanel } from "@/components/side-panel";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden`}
       >
         <ConvexClientProvider>
           <ThemeProvider
@@ -35,7 +37,14 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <SidebarProvider className="h-screen pt-2">
+
+              <Sidepanel />
+              <SidebarInset className="app-inset-bg">
+                
+                {children}
+              </SidebarInset>
+            </SidebarProvider>
           </ThemeProvider>
         </ConvexClientProvider>
       </body>

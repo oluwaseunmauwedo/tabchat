@@ -4,114 +4,117 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
-import { Loader2 } from "lucide-react"
-import { useAction } from "convex/react"
+import { useMutation, useQuery } from "convex/react"
 import { api } from "../../convex/_generated/api"
 import Image from "next/image"
-import { ModeToggle } from "@/components/mode-toggle"
+import { Calligraffitti } from "next/font/google"
+
+export const call = Calligraffitti({
+  variable: "--font-kode-mono",
+  subsets: ["latin"],
+  weight: "400",
+})
 
 export default function ImageStudio() {
   const [prompt, setPrompt] = useState("")
-  const [generatedImage, setGeneratedImage] = useState<string | null>(null)
-  const [isGenerating, setIsGenerating] = useState(false)
-  const generateImage = useAction(api.images.generate.generate)
+  const generateImage = useMutation(api.images.generate.scheduleImageGeneration)
+  const images = useQuery(api.image.getImages)
 
-
-  const handleGenerateImage = async () => {
-    if (!prompt.trim()) return
-    
-    setIsGenerating(true)
-    try {
-      console.log("Starting image generation...")
-      const result = await generateImage({ prompt })
-      console.log("Generation result:", result)
-      
-      if (result) {
-        const dataUrl = `data:image/png;base64,${result}`
-        console.log("Setting image data URL")
-        setGeneratedImage(dataUrl)
-      } else {
-        console.log("No image generated - result was null/undefined")
-      }
-    } catch (error) {
-      console.error("Error generating image:", error)
-      setGeneratedImage(null)
-    } finally {
-      console.log("Generation process completed")
-      setIsGenerating(false)
-    }
-  }
+  const presets = [
+    "A dreamy watercolor landscape, pastel colors, soft light",
+    "Futuristic neon city at dusk, rain reflections, cyberpunk",
+    "Studio portrait, Rembrandt lighting, 85mm lens, shallow depth",
+    "Macro shot of dew drops on a leaf, high detail",
+  ]
 
   return (
-    <div className="min-h-screen">
-      <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
-        <div className="container mx-auto px-4 py-4 max-w-7xl">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <span className="text-xl font-semibold text-foreground">
-                imageflow
-              </span>
-            </div>
-            <ModeToggle />
-          </div>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-200px)]">
+    <div className="h-screen flex flex-col overflow-hidden">
+      <div className="flex-1 px-4 pb-4 md:px-6 md:pb-6 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 h-full">
+          {/* Prompt Box Section */}
           <div className="flex flex-col justify-center">
             <div className="relative">
               <Textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Describe what you want to create..."
-                className="min-h-48 w-full bg-zinc-50 dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 resize-none text-sm leading-relaxed placeholder:text-zinc-400 border-zinc-200 dark:border-zinc-800 focus:ring-1 focus:ring-zinc-300 dark:focus:ring-zinc-700 focus:border-zinc-300 dark:focus:border-zinc-700 transition-all duration-200 rounded-2xl shadow-sm"
-                onKeyDown={(e) => {
+                className="min-h-40 w-full text-sm leading-relaxed resize-none rounded-xl border border-border shadow-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-foreground/50"
+                onKeyDown={async (e) => {
                   if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-                    handleGenerateImage()
+                    if (!prompt.trim()) return
+                    await generateImage({ prompt })
+                    setPrompt("")
                   }
                 }}
               />
-
               <div className="absolute bottom-3 right-3 flex items-center gap-2">
-                <span className="text-xs text-zinc-400 hidden sm:block">⌘ + Enter</span>
+                <span className="text-xs text-foreground/50 hidden sm:block">⌘ + Enter</span>
                 <Button
-                  onClick={handleGenerateImage}
-                  disabled={!prompt.trim() || isGenerating}
-                  className="bg-zinc-800 hover:bg-zinc-700 text-zinc-100 rounded-xl px-4 py-2 text-sm font-medium transition-colors"
+                  onClick={async () => {
+                    if (!prompt.trim()) return
+                    await generateImage({ prompt })
+                    setPrompt("")
+                  }}
+                  disabled={!prompt.trim()}
+                  className="rounded-lg px-4 py-2 text-sm font-medium shadow-sm"
                 >
-                  {isGenerating ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                      Creating...
-                    </>
-                  ) : (
-                    "Create"
-                  )}
+                  Create
                 </Button>
               </div>
             </div>
+
+            {/* Preset Buttons */}
+            <div className="mt-3 flex flex-wrap gap-2">
+              {presets.map((p) => (
+                <Button
+                  key={p}
+                  variant="secondary"
+                  size="sm"
+                  className="rounded-full text-xs"
+                  onClick={() => setPrompt(p)}
+                >
+                  {p}
+                </Button>
+              ))}
+            </div>
           </div>
+
+          {/* Image Gallery Section */}
           <div className="flex flex-col justify-center">
-            {generatedImage ? (
-              <Card className="p-4 bg-card/50 backdrop-blur-sm border border-white/10 rounded-4xl w-full">
-                <div className="relative overflow-hidden rounded-xl aspect-square">
-                  <Image
-                    src={generatedImage}
-                    alt="Generated image"
-                    className="w-full h-full object-cover"
-                    width={500}
-                    height={500}
-                  />
+            {images && images.some((img) => Boolean(img.url)) ? (
+              <div className="max-h-[1000px] overflow-y-auto">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                  {images
+                    .filter((img) => Boolean(img.url))
+                    .map((image) => (
+                      <div
+                        key={image._id}
+                        className="group relative overflow-hidden rounded-lg border border-border aspect-square transition hover:shadow-md"
+                      >
+                        <Image
+                          src={image.url!}
+                          alt={image.prompt}
+                          fill
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+                          quality={90}
+                          loading="lazy"
+                          unoptimized
+                        />
+                        <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/40 to-transparent">
+                          <p className="text-[11px] text-white/90 line-clamp-2">{image.prompt}</p>
+                        </div>
+                      </div>
+                    ))}
                 </div>
-              </Card>
+              </div>
             ) : (
-              <Card className="bg-card/30 backdrop-blur-sm border border-white/10 rounded-2xl w-full">
+              <Card className="border border-border rounded-xl w-full">
                 <div className="flex items-center justify-center p-8">
                   <div className="text-center">
-                   
-                    <p className="text-muted-foreground text-lg">Enter a prompt to generate your first image</p>
+                    <p className="text-muted-foreground text-lg">
+                      Enter a prompt to generate your first image
+                    </p>
                   </div>
                 </div>
               </Card>
