@@ -11,6 +11,7 @@
 import type * as http from "../http.js";
 import type * as image from "../image.js";
 import type * as images_generate from "../images/generate.js";
+import type * as images_imageGen from "../images/imageGen.js";
 import type * as images_persist from "../images/persist.js";
 import type * as model from "../model.js";
 
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   image: typeof image;
   "images/generate": typeof images_generate;
+  "images/imageGen": typeof images_imageGen;
   "images/persist": typeof images_persist;
   model: typeof model;
 }>;
