@@ -1,137 +1,40 @@
-"use client"
+import { ArrowRight } from "lucide-react"
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Card } from "@/components/ui/card"
-import { useMutation, useQuery } from "convex/react"
-import { api } from "../../convex/_generated/api"
-import Image from "next/image"
-import { Calligraffitti } from "next/font/google"
-import ImagePopup from "@/components/image-open" 
-
-export const call = Calligraffitti({
-  variable: "--font-kode-mono",
-  subsets: ["latin"],
-  weight: "400",
-})
-
-export default function ImageStudio() {
-  const [prompt, setPrompt] = useState("")
-  const [selectedImage, setSelectedImage] = useState<{ url: string; prompt: string } | null>(null)
-
-  const generateImage = useMutation(api.images.generate.scheduleImageGeneration)
-  const images = useQuery(api.image.getImages)
-
-  const presets = [
-    "A dreamy watercolor landscape, pastel colors, soft light",
-    "Futuristic neon city at dusk, rain reflections, cyberpunk",
-    "Studio portrait, Rembrandt lighting, 85mm lens, shallow depth",
-    "Macro shot of dew drops on a leaf, high detail",
-  ]
-
+export default function HomePage() {
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
-      <div className="flex-1 px-4 pb-4 md:px-6 md:pb-6 overflow-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 h-full">
-          <div className="flex flex-col justify-center">
-            <div className="relative">
-              <Textarea
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                placeholder="Describe what you want to create..."
-                className="min-h-40 w-full text-sm leading-relaxed resize-none rounded-xl border border-border shadow-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-foreground/50"
-                onKeyDown={async (e) => {
-                  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-                    if (!prompt.trim()) return
-                    await generateImage({ prompt, imageWidth: 1024, imageHeight: 1024, numberOfImages: 1 })
-                    setPrompt("")
-                  }
-                }}
-              />
-              <div className="absolute bottom-3 right-3 flex items-center gap-2">
-                <span className="text-xs text-foreground/50 hidden sm:block">⌘ + Enter</span>
-                <Button
-                  onClick={async () => {
-                    if (!prompt.trim()) return
-                    await generateImage({ prompt, imageWidth: 1024, imageHeight: 1024, numberOfImages: 1 })
-                    setPrompt("")
-                  }}
-                  disabled={!prompt.trim()}
-                  className="rounded-lg px-4 py-2 text-sm font-medium shadow-sm"
-                >
-                  Create
-                </Button>
-              </div>
+    <div className="min-h-screen relative z-10">
+      <main className="relative z-10 px-6 py-20">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-32">
+            <div className="animate-fade-in-up">
+              <h2 className="hero-title text-7xl md:text-9xl text-white mb-12 text-balance italic font-light">
+                Create Beyond
+                <br />
+                <span className="bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 bg-clip-text text-transparent font-bold">
+                  Imagination
+                </span>
+              </h2>
             </div>
 
-            <div className="mt-3 flex flex-wrap gap-2">
-              {presets.map((p) => (
-                <Button
-                  key={p}
-                  variant="secondary"
-                  size="sm"
-                  className="rounded-full text-xs"
-                  onClick={() => setPrompt(p)}
-                >
-                  {p}
-                </Button>
-              ))}
+            <div className="animate-fade-in-up" style={{ animationDelay: "0.2s", opacity: 0 }}>
+              <p className="premium-text text-2xl md:text-3xl text-white/70 mb-16 text-pretty max-w-4xl mx-auto leading-relaxed">
+                Where creativity meets cutting-edge AI. Transform your ideas into breathtaking visuals that captivate
+                and inspire.
+              </p>
             </div>
-          </div>
 
-          <div className="flex flex-col justify-center">
-            {images && images.some((img) => Boolean(img.url) && img.status === "generated") ? (
-              <div className="max-h-[1000px] overflow-y-auto">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                  {images
-                    .filter((img) => Boolean(img.url) && img.status === "generated")
-                    .map((image) => (
-                      <div
-                        key={image._id}
-                        className="group relative overflow-hidden rounded-lg border border-border aspect-square transition hover:shadow-md cursor-pointer"
-                        onClick={() => setSelectedImage({ url: image.url!, prompt: image.prompt })}
-                      >
-                        <Image
-                          src={image.url!}
-                          alt={image.prompt}
-                          fill
-                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                          className="object-cover transition-transform duration-500 group-hover:scale-[1.05]"
-                          quality={90}
-                          loading="lazy"
-                          unoptimized
-                        />
-                        <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/40 to-transparent">
-                          <p className="text-[11px] text-white/90 line-clamp-2">{image.prompt}</p>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </div>
-            ) : (
-              <Card className="border border-border rounded-xl w-full">
-                <div className="flex items-center justify-center p-8">
-                  <div className="text-center">
-                    <p className="text-muted-foreground text-lg">
-                      Enter a prompt to generate your first image
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            )}
+            <div
+              className="animate-fade-in-up flex items-center justify-center gap-8"
+              style={{ animationDelay: "0.4s", opacity: 0 }}
+            >
+              <button className="bg-white text-black px-10 py-5 rounded-full font-semibold text-xl hover:bg-white/90 transition-all duration-300 flex items-center gap-3 shadow-2xl">
+                Start Creating
+                <ArrowRight className="w-6 h-6" />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-
-      {selectedImage && (
-        <ImagePopup
-          isOpen={!!selectedImage}
-          onClose={() => setSelectedImage(null)}
-          imageUrl={selectedImage.url}
-          prompt={selectedImage.prompt}
-        />
-      )}
+      </main>
     </div>
   )
 }

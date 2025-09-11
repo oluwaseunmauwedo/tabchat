@@ -37,14 +37,14 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <SidebarProvider className="h-screen pt-2">
+            {/* <SidebarProvider className="h-screen pt-2">
 
               <Sidepanel />
-              <SidebarInset className="app-inset-bg">
+              <SidebarInset className="app-inset-bg"> */}
                 
                 {children}
-              </SidebarInset>
-            </SidebarProvider>
+              {/* </SidebarInset>
+            </SidebarProvider> */}
           </ThemeProvider>
         </ConvexClientProvider>
       </body>
