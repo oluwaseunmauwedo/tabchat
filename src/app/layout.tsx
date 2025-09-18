@@ -33,14 +33,14 @@ export default function RootLayout({
         <ConvexClientProvider>
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >
-            {/* <SidebarProvider className="h-screen pt-2">
+            {/* <SidebarProvider >
 
               <Sidepanel />
-              <SidebarInset className="app-inset-bg"> */}
+              <SidebarInset > */}
                 
                 {children}
               {/* </SidebarInset>

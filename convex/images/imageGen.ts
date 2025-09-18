@@ -3,9 +3,7 @@ import { internalAction } from "../_generated/server";
 import { experimental_generateImage as generateImage } from "ai";
 import { Effect } from "effect";
 import { api } from "../_generated/api";
-import { fal } from '@ai-sdk/fal';
-
-
+import { fal } from "@ai-sdk/fal";
 
 export const generateImages = internalAction({
   args: {
@@ -16,19 +14,26 @@ export const generateImages = internalAction({
     storageId: v.optional(v.id("_storage")),
     originalImageId: v.optional(v.id("images")),
   },
-  handler : async( ctx, args) =>  {
+  handler: async (ctx, args) => {
     const program = Effect.gen(function* (_) {
-      const { prompt, imageHeight, imageWidth, numberOfImages, storageId, originalImageId } = args
+      const {
+        prompt,
+        imageHeight,
+        imageWidth,
+        numberOfImages,
+        storageId,
+        originalImageId,
+      } = args;
       const size = `${imageWidth}x${imageHeight}` as `${number}x${number}`;
-      
+
       const { images } = yield* _(
         Effect.tryPromise({
           try: () =>
             generateImage({
-              model: fal.image("fal-ai/flux/dev"),
+              model: fal.image("fal-ai/flux-lora"),
               prompt: prompt,
               size: size,
-              n : numberOfImages,
+              n: numberOfImages,
               // providerOptions: {
               //   fal: {
               //     image_url:
@@ -36,9 +41,9 @@ export const generateImages = internalAction({
               //   },
               // },
             }),
-          catch: () => new Error("Error While generating image")
-        })
-      )
+          catch: () => new Error("Error While generating image"),
+        }),
+      );
 
       const storedImages = [];
 
@@ -47,17 +52,19 @@ export const generateImages = internalAction({
           Effect.tryPromise({
             try: () => {
               const copiedBytes = new Uint8Array(image.uint8Array);
-              return ctx.storage.store(new Blob([copiedBytes], { type: image.mediaType }));
+              return ctx.storage.store(
+                new Blob([copiedBytes], { type: image.mediaType }),
+              );
             },
-            catch: () => new Error("Error while storing the images")
-          })
-        )
+            catch: () => new Error("Error while storing the images"),
+          }),
+        );
 
         const url = yield* _(
           Effect.tryPromise({
             try: () => ctx.storage.getUrl(storageId),
             catch: (error) => new Error(`Failed to get image URL: ${error}`),
-          })
+          }),
         );
 
         yield* _(
@@ -75,18 +82,20 @@ export const generateImages = internalAction({
                 storageId: args.storageId,
               });
             },
-            catch : () => new Error("Error while persit the data")
-          })
-        )
+            catch: () => new Error("Error while persit the data"),
+          }),
+        );
         storedImages.push({
           storageId,
           mediaType: image.mediaType,
           url,
         });
       }
-     return storageId
+      return storageId;
     }).pipe(
-      Effect.tapError((err) => Effect.sync(() => console.error("Error in generateImages:", err)))
+      Effect.tapError((err) =>
+        Effect.sync(() => console.error("Error in generateImages:", err)),
+      ),
     );
     try {
       return await Effect.runPromise(program);
@@ -94,6 +103,5 @@ export const generateImages = internalAction({
       console.error("Failed to execute generateImages program:", error);
       throw error;
     }
-     
   },
 });
