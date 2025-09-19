@@ -32,11 +32,13 @@ export const generateImages = internalAction({
           try: () =>
             generateText({
               model: google("gemini-2.5-flash-image-preview"),
-              providerOptions: { google: { responseModalities: ["TEXT", "IMAGE"] } },
+              providerOptions: {
+                google: { responseModalities: ["TEXT", "IMAGE"] },
+              },
               prompt,
             }),
           catch: (error) => new Error(`Failed to generate Image: ${error}`),
-        })
+        }),
       );
 
       const storedImages = [];
@@ -55,14 +57,14 @@ export const generateImages = internalAction({
             Effect.tryPromise({
               try: () => ctx.storage.store(blob),
               catch: (error) => new Error(`Failed to store image: ${error}`),
-            })
+            }),
           );
 
           const url = yield* _(
             Effect.tryPromise({
               try: () => ctx.storage.getUrl(storageId),
               catch: (error) => new Error(`Failed to get image URL: ${error}`),
-            })
+            }),
           );
 
           // Fix: Use runMutation as an Effect
@@ -82,7 +84,7 @@ export const generateImages = internalAction({
                 });
               },
               catch: (error) => new Error(`Failed to save image: ${error}`),
-            })
+            }),
           );
 
           storedImages.push({
@@ -96,7 +98,9 @@ export const generateImages = internalAction({
 
       return storedImages;
     }).pipe(
-      Effect.tapError((err) => Effect.sync(() => console.error("Error in generateImages:", err)))
+      Effect.tapError((err) =>
+        Effect.sync(() => console.error("Error in generateImages:", err)),
+      ),
     );
 
     // Fix: Properly handle the Effect execution
@@ -115,7 +119,7 @@ export const scheduleImageGeneration = mutation({
     imageWidth: v.number(),
     imageHeight: v.number(),
     model: v.optional(v.string()),
-    numberOfImages: v.number(), 
+    numberOfImages: v.number(),
     storageId: v.optional(v.id("_storage")),
     originalImageId: v.optional(v.id("images")),
   },

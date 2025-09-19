@@ -10,12 +10,16 @@ export default defineSchema({
     imageHeight: v.optional(v.number()),
     numberOfImages: v.optional(v.number()),
     storageId: v.optional(v.id("_storage")),
-    status: v.union(
-      v.literal("pending"),
-      v.literal("generated"),
-      v.literal("failed"),
-      v.literal("running"),
+    status: v.optional(
+      v.union(
+        v.literal("pending"),
+        v.literal("generated"),
+        v.literal("failed"),
+        v.literal("running"),
+      ),
     ),
+    originalImageId: v.optional(v.string()),
+    isGenerated: v.optional(v.boolean()),
     createdAt: v.optional(v.number()),
     fileSize: v.optional(v.number()),
     fileName: v.optional(v.string()),

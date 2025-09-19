@@ -5,6 +5,7 @@ import { ConvexClientProvider } from "./ConvexClientProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Sidepanel } from "@/components/side-panel";
+import { Header } from "@radix-ui/react-accordion";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,20 +32,20 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden`}
       >
         <ConvexClientProvider>
-          <ThemeProvider
+          <ThemeProvider 
             attribute="class"
-            defaultTheme="dark"
+            defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
-            {/* <SidebarProvider >
+            <SidebarProvider >
 
               <Sidepanel />
-              <SidebarInset > */}
+              <SidebarInset >
                 
                 {children}
-              {/* </SidebarInset>
-            </SidebarProvider> */}
+              </SidebarInset>
+            </SidebarProvider>
           </ThemeProvider>
         </ConvexClientProvider>
       </body>

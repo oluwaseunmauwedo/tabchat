@@ -11,51 +11,41 @@ import {
     SidebarSeparator,
     SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { Croissant_One } from 'next/font/google';
-
-export const kodeMono = Croissant_One({
-    variable: "--font-kode-mono",
-    subsets: ["latin"],
-    weight: "400",
-});
-
+import { ModeToggle } from "@/components/mode-toggle"
 
 export function Sidepanel() {
     return (
         <Sidebar
             variant="inset"
             side="left"
-            className="sp-sidebar"
+            className="sp-sidebar overflow-hidden" 
         >
             <SidebarRail />
-            <SidebarHeader className="sp-header">
+            <SidebarHeader className="sp-header relative">
                 <div className="flex items-center justify-between px-4 py-3">
-
-
-                    <div className={`sp-title text-9xl font-semibold tracking-tight ${kodeMono.className}`}>picflow</div>
-
-
-                    <SidebarTrigger className="h-8 w-8 hover:bg-sidebar-accent/50 transition-colors rounded-lg" />
+                    <div className="text-lg font-medium">picflow</div>
+                    <SidebarTrigger className="h-6 w-6 rounded-md hover:bg-muted transition-colors" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-16 h-16 bg-sidebar rounded-bl-[2rem] border-l border-b border-border">
+                    <div className="absolute top-3 right-3">
+                        <ModeToggle />
+                    </div>
                 </div>
             </SidebarHeader>
 
-            <SidebarContent className="sp-content px-2 py-2">
+            <SidebarContent className="sp-content px-2 py-2 overflow-hidden"> 
                 <SidebarGroup>
-
                     <SidebarGroupContent>
-                        <SidebarMenu className="gap-1.5 px-2 rounded-xl">
-                            <SidebarMenuButton className="rounded-xl" tooltip="Text to Image" data-active="true">
-
-                                <span className="sp-label">Text to Image</span>
+                        <SidebarMenu className="space-y-1">
+                            <SidebarMenuButton className="rounded-md" tooltip="Text to Image" data-active="true">
+                                <span>Text to Image</span>
                             </SidebarMenuButton>
-                            <SidebarMenuButton className="rounded-xl" tooltip="Image to Image">
-                                <span className="sp-label">Image to Image</span>
+                            <SidebarMenuButton className="rounded-md" tooltip="Image to Image">
+                                <span>Image to Image</span>
                             </SidebarMenuButton>
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
-
-                <SidebarSeparator />
             </SidebarContent>
         </Sidebar>
     )
