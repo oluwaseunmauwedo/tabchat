@@ -191,6 +191,14 @@
   body {
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
+    /* Subtle global gradient background */
+    background-image:
+      radial-gradient(1200px 800px at 8% 6%, color-mix(in oklch, var(--primary) 6%, transparent), transparent 60%),
+      radial-gradient(1000px 700px at 92% 12%, color-mix(in oklch, var(--accent) 5%, transparent), transparent 62%),
+      radial-gradient(900px 600px at 50% 100%, color-mix(in oklch, var(--secondary) 4%, transparent), transparent 65%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 
   /* Custom scrollbar styles */
@@ -244,6 +252,8 @@
   [data-sidebar="inset"] {
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+    /* Let the body gradient show through */
+    background: transparent;
   }
 
   [data-sidebar="inset"]::-webkit-scrollbar {

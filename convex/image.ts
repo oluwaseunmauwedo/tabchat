@@ -8,6 +8,13 @@ export const sendImages = mutation({
     isGenerated: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+
+    const identity = await ctx.auth.getUserIdentity();
+		if (identity === null) {
+			return {
+				message: "Not authenticated",
+			};
+		}
     await ctx.db.insert("images", {
       body: args.storageId,
       createdAt: Date.now(),
@@ -15,6 +22,7 @@ export const sendImages = mutation({
       originalImageId: args.originalImageId,
       model: "",
       prompt: "",
+      userId : identity.subject
     });
   },
 });
@@ -23,6 +31,12 @@ export const getImages = query({
   handler: async (ctx) => {
     const images = await ctx.db.query("images").order("desc").collect();
 
+    const identity = await ctx.auth.getUserIdentity();
+		if (identity === null) {
+			return {
+				message: "Not authenticated",
+			};
+		}
     // Generate URLs for each image
     const imagesWithUrls = await Promise.all(
       images.map(async (image) => {

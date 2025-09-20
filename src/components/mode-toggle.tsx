@@ -13,6 +13,20 @@ export function ModeToggle() {
     setTheme(isDark ? "light" : "dark")
   }
 
+  if (theme === undefined) {
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        className="relative rounded-full"
+        disabled
+      >
+        <div className="h-[1.3rem] w-[1.3rem]" />
+        <span className="sr-only">Loading theme</span>
+      </Button>
+    )
+  }
+
   return (
     <Button
       variant="ghost"

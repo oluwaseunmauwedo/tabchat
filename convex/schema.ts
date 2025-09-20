@@ -2,9 +2,11 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+
   images: defineTable({
     prompt: v.string(),
     model: v.string(),
+    userId : v.string(),
     body: v.optional(v.string()),
     imageWidth: v.optional(v.number()),
     imageHeight: v.optional(v.number()),
@@ -23,5 +25,7 @@ export default defineSchema({
     createdAt: v.optional(v.number()),
     fileSize: v.optional(v.number()),
     fileName: v.optional(v.string()),
-  }),
+  }).index("userId", ["userId"]),
+
+
 });

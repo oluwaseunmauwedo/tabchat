@@ -4,7 +4,6 @@ import { experimental_generateImage as generateImage } from "ai";
 import { Effect } from "effect";
 import { api } from "../_generated/api";
 import { fal } from "@ai-sdk/fal";
-import { models } from "../model";
 
 export const generateImages = internalAction({
   args: {
@@ -15,6 +14,7 @@ export const generateImages = internalAction({
     storageId: v.optional(v.id("_storage")),
     originalImageId: v.optional(v.id("images")),
     model : v.string(),
+    userId: v.string(),
   },
   handler: async (ctx, args) => {
     const program = Effect.gen(function* (_) {
@@ -26,9 +26,9 @@ export const generateImages = internalAction({
         storageId,
         originalImageId,
         model,
+        userId,
       } = args;
       const size = `${imageWidth}x${imageHeight}` as `${number}x${number}`;
-
       const { images } = yield* _(
         Effect.tryPromise({
           try: () =>
@@ -37,12 +37,6 @@ export const generateImages = internalAction({
               prompt: prompt,
               size: size,
               n: numberOfImages,
-              // providerOptions: {
-              //   fal: {
-              //     image_url:
-              //       'https://v3.fal.media/files/rabbit/rmgBxhwGYb2d3pl3x9sKf_output.png',
-              //   },
-              // },
             }),
           catch: () => new Error("Error While generating image"),
         }),
@@ -83,6 +77,8 @@ export const generateImages = internalAction({
                 numberOfImages: numberOfImages ?? 1,
                 status: "generated",
                 storageId: args.storageId,
+                userId: userId,
+                
               });
             },
             catch: () => new Error("Error while persit the data"),

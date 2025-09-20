@@ -17,6 +17,7 @@ export const saveGeneratedImage = mutation({
       v.literal("failed"),
       v.literal("running"),
     ),
+    userId: v.string(),
   },
   handler: async (ctx, args) => {
     const {
@@ -28,7 +29,10 @@ export const saveGeneratedImage = mutation({
       status,
       storageId,
       body,
+      userId,
     } = args;
+
+
 
     const generatedImageId = await ctx.db.insert("images", {
       prompt: prompt,
@@ -40,6 +44,7 @@ export const saveGeneratedImage = mutation({
       createdAt: Date.now(),
       status: status,
       body: body,
+      userId: userId,
     });
     return generatedImageId;
   },

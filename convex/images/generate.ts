@@ -21,10 +21,11 @@ export const generateImages = internalAction({
     imageHeight: v.optional(v.number()),
     storageId: v.optional(v.id("_storage")),
     originalImageId: v.optional(v.id("images")),
+    userId: v.string(),
   },
   handler: async (ctx, args) => {
     const program = Effect.gen(function* (_) {
-      const { prompt, imageWidth, imageHeight, originalImageId } = args;
+      const { prompt, imageWidth, imageHeight, originalImageId, userId } = args;
 
       // Generate images with Effect
       const result = yield* _(
@@ -81,6 +82,7 @@ export const generateImages = internalAction({
                   numberOfImages: 1,
                   status: "generated",
                   storageId: args.storageId,
+                  userId: userId,
                 });
               },
               catch: (error) => new Error(`Failed to save image: ${error}`),
@@ -133,6 +135,13 @@ export const scheduleImageGeneration = mutation({
       model,
     } = args;
 
+    const identity = await ctx.auth.getUserIdentity();
+		if (identity === null) {
+			return {
+				message: "Not authenticated",
+			};
+		}
+
     const originalImageId = await ctx.db.insert("images", {
       prompt: prompt,
       body: storageId,
@@ -142,6 +151,7 @@ export const scheduleImageGeneration = mutation({
       createdAt: Date.now(),
       status: "running",
       model: model!,
+      userId: identity.subject,
     });
 
     await ctx.scheduler.runAfter(0, internal.images.imageGen.generateImages, {
@@ -150,6 +160,7 @@ export const scheduleImageGeneration = mutation({
       imageHeight: imageHeight,
       numberOfImages: numberOfImages,
       model : model!,
+      userId: identity.subject,
     });
 
     return originalImageId;

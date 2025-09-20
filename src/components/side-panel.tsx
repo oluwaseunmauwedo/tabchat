@@ -14,6 +14,7 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar"
 import { ModeToggle } from "@/components/mode-toggle"
+import { useRouter } from "next/navigation";
 
 function SidebarThemeToggleWrapper() {
     const { state, setOpen, isMobile, setOpenMobile } = useSidebar()
@@ -32,6 +33,7 @@ function SidebarThemeToggleWrapper() {
 }
 
 export function Sidepanel() {
+    const router = useRouter();
     return (
         <Sidebar
             variant="inset"
@@ -60,10 +62,10 @@ export function Sidepanel() {
                 <SidebarGroup>
                     <SidebarGroupContent>
                         <SidebarMenu className="space-y-1">
-                            <SidebarMenuButton className="rounded-md" tooltip="Text to Image" data-active="true">
+                            <SidebarMenuButton onClick={() => router.push("/text-to-image")} className="rounded-md" tooltip="Text to Image" data-active="true">
                                 <span>Text to Image</span>
                             </SidebarMenuButton>
-                            <SidebarMenuButton className="rounded-md" tooltip="Image to Image">
+                            <SidebarMenuButton onClick={() => router.push("/image-to-image")} className="rounded-md" tooltip="Image to Image">
                                 <span>Image to Image</span>
                             </SidebarMenuButton>
                         </SidebarMenu>
