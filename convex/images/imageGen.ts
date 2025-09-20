@@ -4,6 +4,7 @@ import { experimental_generateImage as generateImage } from "ai";
 import { Effect } from "effect";
 import { api } from "../_generated/api";
 import { fal } from "@ai-sdk/fal";
+import { models } from "../model";
 
 export const generateImages = internalAction({
   args: {
@@ -13,6 +14,7 @@ export const generateImages = internalAction({
     numberOfImages: v.optional(v.number()),
     storageId: v.optional(v.id("_storage")),
     originalImageId: v.optional(v.id("images")),
+    model : v.string(),
   },
   handler: async (ctx, args) => {
     const program = Effect.gen(function* (_) {
@@ -23,6 +25,7 @@ export const generateImages = internalAction({
         numberOfImages,
         storageId,
         originalImageId,
+        model,
       } = args;
       const size = `${imageWidth}x${imageHeight}` as `${number}x${number}`;
 
@@ -30,7 +33,7 @@ export const generateImages = internalAction({
         Effect.tryPromise({
           try: () =>
             generateImage({
-              model: fal.image("fal-ai/flux-lora"),
+              model: fal.image(model!),
               prompt: prompt,
               size: size,
               n: numberOfImages,
@@ -74,7 +77,7 @@ export const generateImages = internalAction({
                 body: storageId,
                 originalImageId: originalImageId,
                 prompt,
-                model: "fal-ai/flux/dev",
+                model: model ?? "fal-ai/flux/dev",
                 imageWidth: imageWidth,
                 imageHeight: imageHeight,
                 numberOfImages: numberOfImages ?? 1,

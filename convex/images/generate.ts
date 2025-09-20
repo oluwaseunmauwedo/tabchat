@@ -118,7 +118,7 @@ export const scheduleImageGeneration = mutation({
     prompt: v.string(),
     imageWidth: v.number(),
     imageHeight: v.number(),
-    model: v.optional(v.string()),
+    model: v.string(),
     numberOfImages: v.number(),
     storageId: v.optional(v.id("_storage")),
     originalImageId: v.optional(v.id("images")),
@@ -141,7 +141,7 @@ export const scheduleImageGeneration = mutation({
       numberOfImages: numberOfImages,
       createdAt: Date.now(),
       status: "running",
-      model: model ?? "gemini-2.5-flash-image-preview",
+      model: model!,
     });
 
     await ctx.scheduler.runAfter(0, internal.images.imageGen.generateImages, {
@@ -149,6 +149,7 @@ export const scheduleImageGeneration = mutation({
       imageWidth: imageWidth,
       imageHeight: imageHeight,
       numberOfImages: numberOfImages,
+      model : model!,
     });
 
     return originalImageId;

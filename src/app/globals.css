@@ -192,4 +192,110 @@
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
   }
+
+  /* Custom scrollbar styles */
+  :root {
+    --scrollbar-bg: rgba(0, 0, 0, 0.1);
+    --scrollbar-thumb: rgba(0, 0, 0, 0.2);
+    --scrollbar-thumb-hover: rgba(0, 0, 0, 0.3);
+  }
+
+  .dark {
+    --scrollbar-bg: rgba(255, 255, 255, 0.1);
+    --scrollbar-thumb: rgba(255, 255, 255, 0.2);
+    --scrollbar-thumb-hover: rgba(255, 255, 255, 0.3);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-bg);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Firefox scrollbar styles */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+  }
+
+  /* Ensure scrollable elements work properly */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Apply custom scrollbar only to the main scrollable container */
+  [data-sidebar="inset"] {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+  }
+
+  [data-sidebar="inset"]::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  [data-sidebar="inset"]::-webkit-scrollbar-track {
+    background: var(--scrollbar-bg);
+  }
+
+  [data-sidebar="inset"]::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+  }
+
+  [data-sidebar="inset"]::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+
+  /* Model selector specific enhancements */
+  .model-selector-sidebar {
+    @apply bg-sidebar/90 backdrop-blur-md border border-sidebar-border/60
+           text-sidebar-foreground hover:bg-sidebar/95 hover:border-sidebar-border/80
+           transition-all duration-300 rounded-lg shadow-md hover:shadow-lg;
+  }
+
+  /* Sidebar subtle blur and glassy look */
+  .sp-sidebar [data-slot="sidebar-inner"] {
+    @apply backdrop-blur-xl bg-sidebar/85 border border-sidebar-border/50 shadow-lg;
+  }
+  .sp-header {
+    @apply bg-transparent;
+  }
+  .sp-content {
+    @apply bg-transparent;
+  }
+
+  .model-selector-dropdown {
+    @apply bg-sidebar/95 backdrop-blur-xl border border-sidebar-border/50
+           rounded-lg shadow-2xl;
+  }
+
+  .model-selector-item {
+    @apply hover:bg-sidebar-accent/30 focus:bg-sidebar-accent/30
+           border border-sidebar-border/40 hover:border-sidebar-border/70
+           transition-colors;
+  }
+
+  .model-selector-tooltip {
+    @apply bg-sidebar/95 backdrop-blur-xl border border-sidebar-border/50
+           text-sidebar-foreground shadow-lg;
+  }
 }

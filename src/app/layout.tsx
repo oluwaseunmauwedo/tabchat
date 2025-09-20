@@ -5,7 +5,7 @@ import { ConvexClientProvider } from "./ConvexClientProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Sidepanel } from "@/components/side-panel";
-import { Header } from "@radix-ui/react-accordion";
+import SidebarFloatingTrigger from "@/components/sidebar-floating-trigger";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -41,8 +41,8 @@ export default function RootLayout({
             <SidebarProvider >
 
               <Sidepanel />
-              <SidebarInset >
-                
+              <SidebarFloatingTrigger />
+              <SidebarInset className="h-screen overflow-auto">
                 {children}
               </SidebarInset>
             </SidebarProvider>

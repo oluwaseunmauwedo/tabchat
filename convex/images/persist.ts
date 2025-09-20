@@ -48,16 +48,18 @@ export const saveGeneratedImage = mutation({
 export const updateImageStatus = mutation({
   args: {
     imageId: v.id("images"),
-    status: v.string(),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("generated"),
+      v.literal("failed"),
+      v.literal("running"),
+    ),
     error: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const { imageId, status, error } = args;
+    const { imageId, status, error = "" } = args;
 
-    const updateData: any = { generationStatus: status };
-    if (error) {
-      updateData.generationError = error;
-    }
+    const updateData = { status, error};
 
     await ctx.db.patch(imageId, updateData);
   },
