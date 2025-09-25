@@ -29,14 +29,17 @@ export const sendImages = mutation({
 
 export const getImages = query({
   handler: async (ctx) => {
-    const images = await ctx.db.query("images").order("desc").collect();
-
     const identity = await ctx.auth.getUserIdentity();
 		if (identity === null) {
 			return {
 				message: "Not authenticated",
 			};
 		}
+    const images = await ctx.db.query("images").order("desc").collect().then((images) => {
+      return images.filter((image) => image.userId === identity.subject);
+    });
+
+  
     // Generate URLs for each image
     const imagesWithUrls = await Promise.all(
       images.map(async (image) => {
