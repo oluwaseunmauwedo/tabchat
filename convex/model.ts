@@ -49,6 +49,23 @@ export const models = [
         name: "Flux Pro Kontext",
         imageInput: true,
         description: "FLUX.1 Image-to-Image is a high-performance endpoint for the FLUX.1 [dev] model that enables rapid transformation of existing images, delivering high-quality style transfers and image modifications with the core FLUX capabilities."
+    },
+    {
+        id: "fal-ai/wan-25-preview/image-to-image",
+        name: "WAN 2.5 Preview Image-to-Image",
+        imageInput: true,
+        description: "Wan 2.5 image-to-image model."
+    }, {
+        id: "fal-ai/flux-krea-lora/stream",
+        name: "Flux Krea Lora Stream",
+        imageInput: true,
+        description: "Flux Krea Lora Stream model."
+    },
+    {
+        id: "fal-ai/imagen4/preview",
+        name: "Imagen 4 Preview",
+        imageInput: true,
+        description: "Imagen 4 Preview model."
     }
 
 ]

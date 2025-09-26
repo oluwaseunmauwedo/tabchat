@@ -43,16 +43,16 @@ export function RatioSelector({
                     size="sm"
                     role="combobox"
                     aria-expanded={open}
-                    className="h-8 px-2 rounded-lg bg-card/90 border border-border/40 hover:bg-card/95 hover:border-border/60 transition-all duration-200 text-xs min-w-[180px] justify-between"
+                    className="h-7 md:h-8 px-1.5 md:px-2 rounded-lg bg-card/90 border border-border/40 hover:bg-card/95 hover:border-border/60 transition-all duration-200 text-xs min-w-[140px] md:min-w-[180px] justify-between"
                 >
-                    <div className="flex items-center gap-2 overflow-hidden">
+                    <div className="flex items-center gap-1.5 md:gap-2 overflow-hidden">
                         <RatioPreview width={currentRatio.width} height={currentRatio.height} />
-                        <div className="flex items-center gap-1.5 truncate">
-                            <span className="font-medium truncate">{currentRatio.name}</span>
-                            <span className="text-muted-foreground text-xs shrink-0">({currentRatio.ratio})</span>
+                        <div className="flex items-center gap-1 md:gap-1.5 truncate">
+                            <span className="font-medium truncate text-xs md:text-sm">{currentRatio.name}</span>
+                            <span className="text-muted-foreground text-xs shrink-0 hidden sm:inline">({currentRatio.ratio})</span>
                         </div>
                     </div>
-                    <ChevronDownIcon className="size-4 opacity-60" />
+                    <ChevronDownIcon className="size-3 md:size-4 opacity-60" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="p-0 w-64" align="start">

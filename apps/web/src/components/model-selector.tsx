@@ -34,10 +34,10 @@ export default function ModelSelector({
           <TooltipTrigger asChild>
             <SelectTrigger className=" rounded-xl">
               {selectedModel ? (
-                <div className="flex items-center justify-between w-full p-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-sidebar-primary/80 shadow-sm" />
-                    <span className="font-medium text-sm">{selectedModel.name}</span>
+                <div className="flex items-center justify-between w-full p-2 md:p-3">
+                  <div className="flex items-center gap-1.5 md:gap-2">
+                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-sidebar-primary/80 shadow-sm" />
+                    <span className="font-medium text-xs md:text-sm truncate">{selectedModel.name}</span>
                   </div>
                 </div>
               ) : (

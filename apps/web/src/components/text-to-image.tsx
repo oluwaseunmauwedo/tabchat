@@ -55,6 +55,8 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
     setPrompt("")
   }
 
+  const imageSupport = models.find((m) => m.id === model)?.imageInput
+
   return (
     <div className="h-full relative text-foreground">
       <div className="relative max-w-6xl mx-auto px-6 py-14 z-10">
@@ -81,33 +83,32 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
                     onChange={(e) => setPrompt(e.target.value)}
                     placeholder="Write your prompt here... (e.g. A neon city with flying cars)"
                     className="w-full rounded-t-3xl bg-card border-0
-                    text-base leading-relaxed placeholder-muted-foreground text-foreground p-4 pr-44 pb-20 min-h-[160px] max-h-[60vh] resize-y
+                    text-sm md:text-base leading-relaxed placeholder-muted-foreground text-foreground p-3 md:p-4 pr-28 md:pr-44 pb-16 md:pb-20 min-h-[120px] md:min-h-[160px] max-h-[60vh] resize-y
                     focus-visible:outline-none focus-visible:ring-0 focus-visible:border-0
                     transition-all duration-300
                     shadow-inner relative z-10"
                   />
 
-                  <div className="pointer-events-none absolute bottom-4 right-4 z-20">
-                    <div className="flex items-center gap-3 pointer-events-auto whitespace-nowrap">
+                  <div className="pointer-events-none absolute bottom-2 right-2 md:bottom-4 md:right-4 z-20">
+                    <div className="flex items-center gap-2 md:gap-3 pointer-events-auto whitespace-nowrap">
                       <RatioSelector
                         selectedRatio={selectedRatio}
                         setSelectedRatio={setSelectedRatio}
                         imageRatios={imageRatios}
                       />
                       <ModelSelector model={model} setModel={setModel} />
-                      <ImageUploader value={url} onChange={setUrl} size={40} />
 
                       <Button
                         onClick={handleGenerate}
-                        disabled={!prompt.trim()}
-                        className="h-10 px-4 rounded-xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80
-                        text-primary-foreground font-medium text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed
+                        disabled={!prompt.trim() || (imageSupport && !url)}
+                        className="h-9 md:h-10 px-3 md:px-4 rounded-xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80
+                        text-primary-foreground font-medium text-xs md:text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed
                         shadow-lg hover:shadow-xl focus:shadow-xl hover:scale-[1.02] focus:scale-[1.02]
                         border border-primary/20 hover:border-primary/30 backdrop-blur-sm overflow-hidden"
                         aria-label="Generate image"
                       >
 
-                        <div className="relative z-10 flex items-center gap-2">
+                        <div className="relative z-10 flex items-center gap-1.5 md:gap-2">
                           <span>Generate</span>
                           <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -116,7 +117,13 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
                       </Button>
                     </div>
                   </div>
+                
                 </div>
+              </div>
+              <div className="mt-4">
+                {imageSupport && (
+                  <ImageUploader value={url} onChange={setUrl} size={56} className="w-full" />
+                )}
               </div>
             </div>
 
@@ -150,8 +157,10 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
                       </Button>
                     ))}
                   </div>
+                 
                 </div>
               </div>
+             
             </div>
           </div>
         </div>
