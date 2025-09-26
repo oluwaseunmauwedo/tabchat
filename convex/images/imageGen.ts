@@ -136,7 +136,7 @@ export const generationSchedules = mutation({
      )
 
      if(identity === null) {
-       throw new Error("The user is not authorized")
+       throw new Error("The identity is null")
      }
 
      yield* _(
@@ -154,7 +154,7 @@ export const generationSchedules = mutation({
             userId: identity.subject,
             url: url,
           }),
-          catch : () => new Error("Error while inderting in the database")
+          catch : () => new Error("Error while inserting")
       })
      )
 
