@@ -42,17 +42,19 @@ export function Sidepanel() {
         >
             <SidebarRail />
             <SidebarHeader className="sp-header relative">
-                <div className="flex items-center justify-between px-4 py-3">
-                    <div className="text-2xl font-bold">picflow</div>
-                    <SidebarTrigger className="h-6 w-6 rounded-md hover:bg-muted transition-colors" />
-                </div>
+                
+            <h1 className="text-5xl sm:text-6xl px-10 py-3 lg:text-2xl xl:text-3xl font-bold tracking-tight leading-[0.9]">
+                <span className="bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent">
+                  picflow
+                </span>
+              </h1>
                 <div className="absolute -top-2 -right-2 w-16 h-16 bg-sidebar rounded-bl-[2rem] border-l border-b border-border">
                     <div className="absolute top-3 right-3">
                         <SidebarThemeToggleWrapper />
                     </div>
                 </div>
             </SidebarHeader>
-
+  
         
             <SidebarContent className="sp-content px-2 py-2 overflow-hidden">
             <div className="flex items-center justify-end px-2 pb-2">
