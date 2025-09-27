@@ -35,10 +35,10 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
 
 
 
-  const [selectedRatio, setSelectedRatio] = useState(imageRatios[3].id)
+  const [selectedRatio, setSelectedRatio] = useState(imageRatios[1].id)
 
   const getCurrentRatio = () => {
-    return imageRatios.find((ratio) => ratio.id === selectedRatio) || imageRatios[3]
+    return imageRatios.find((ratio) => ratio.id === selectedRatio) || imageRatios[0]
   }
 
   const handleGenerate = async () => {

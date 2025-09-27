@@ -17,7 +17,12 @@ export const models = [
         imageInput: false,
         description: "FLUX1.1 [pro] ultra is the newest version of FLUX1.1 [pro], maintaining professional-grade image quality while delivering up to 2K resolution with improved photo realism.",
     },
-
+    {
+        id : "fal-ai/gemini-25-flash-image/edit",
+        name : "Gemini 2.5 Flash Image Edit",
+        imageInput : true,
+        description : "Gemini 2.5 Flash Image Edit is a model that can edit images based on text prompts.",
+    },
     {
 
         id: "fal-ai/recraft/v3/text-to-image",

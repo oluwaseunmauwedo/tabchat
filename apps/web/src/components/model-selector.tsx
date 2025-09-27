@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { models } from "@imageflow/convex/model"
 import {
   Select,
@@ -14,6 +15,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip"
+import { Button } from "./ui/button"
+
+type FilterType = "all" | "text" | "image"
 
 export default function ModelSelector({
   model,
@@ -22,7 +26,16 @@ export default function ModelSelector({
   model: string
   setModel: (model: string) => void
 }) {
+  const [filter, setFilter] = useState<FilterType>("all")
   const selectedModel = models.find((m) => m.id === model)
+  
+  // Filter models based on selected filter
+  const filteredModels = models.filter((modelItem) => {
+    if (filter === "all") return true
+    if (filter === "text") return !modelItem.imageInput
+    if (filter === "image") return modelItem.imageInput
+    return true
+  })
 
   return (
     <TooltipProvider>
@@ -64,7 +77,46 @@ export default function ModelSelector({
         </Tooltip>
 
         <SelectContent className="bg-sidebar/95 backdrop-blur-xl border border-sidebar-border/50 rounded-lg w-80 shadow-2xl p-2">
-          {models.map((modelItem) => (
+          <div className="flex gap-1 mb-3 p-1 bg-sidebar-accent/20 rounded-md">
+            <Button
+              variant={filter === "all" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setFilter("all")}
+              className={`flex-1 h-8 text-xs font-medium transition-all ${
+                filter === "all"
+                  ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+                  : "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/30"
+              }`}
+            >
+              All ({models.length})
+            </Button>
+            <Button
+              variant={filter === "text" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setFilter("text")}
+              className={`flex-1 h-8 text-xs font-medium transition-all ${
+                filter === "text"
+                  ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+                  : "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/30"
+              }`}
+            >
+              Text ({models.filter(m => !m.imageInput).length})
+            </Button>
+            <Button
+              variant={filter === "image" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setFilter("image")}
+              className={`flex-1 h-8 text-xs font-medium transition-all ${
+                filter === "image"
+                  ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+                  : "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/30"
+              }`}
+            >
+              Image ({models.filter(m => m.imageInput).length})
+            </Button>
+          </div>
+          
+          {filteredModels.map((modelItem) => (
             <SelectItem
               key={modelItem.id}
               value={modelItem.id}
@@ -81,11 +133,42 @@ export default function ModelSelector({
                     <span className="font-semibold text-sm text-sidebar-foreground">
                       {modelItem.name}
                     </span>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md text-xs font-medium cursor-help ${
+                          modelItem.imageInput 
+                            ? "bg-sidebar-accent/40 text-sidebar-foreground/90 border border-sidebar-border/30" 
+                            : "bg-sidebar-accent/20 text-sidebar-foreground/70 border border-sidebar-border/20"
+                        }`}>
+                          <div className={`w-1 h-1 rounded-full ${
+                            modelItem.imageInput ? "bg-sidebar-primary" : "bg-sidebar-border"
+                          }`} />
+                          {modelItem.imageInput ? "Image" : "Text"}
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="top"
+                        className="bg-sidebar/95 backdrop-blur-xl border border-sidebar-border/50 text-sidebar-foreground shadow-lg max-w-xs p-3"
+                      >
+                        <div className="space-y-1">
+                          <h4 className="font-semibold text-sm text-sidebar-foreground">
+                            {modelItem.imageInput ? "Image-to-Image Model" : "Text-to-Image Model"}
+                          </h4>
+                          <p className="text-xs text-sidebar-foreground/80 leading-relaxed">
+                            {modelItem.imageInput 
+                              ? "This model can transform and modify existing images based on your prompts. Upload an image and describe the changes you want to make."
+                              : "This model generates images from text descriptions only. Provide a detailed prompt describing the image you want to create."
+                            }
+                          </p>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
                 </div>
                 <p className="text-sidebar-foreground/70 text-xs leading-relaxed">
                   {modelItem.description}
                 </p>
+                
               </div>
             </SelectItem>
           ))}

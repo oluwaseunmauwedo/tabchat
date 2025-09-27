@@ -1,9 +1,10 @@
 import { v } from "convex/values";
 import { internalAction, mutation } from "../_generated/server";
 import { google } from "@ai-sdk/google";
-import { generateText } from "ai";
+import { experimental_generateImage as generateImage } from "ai";
 import { api, internal } from "../_generated/api";
 import { Effect } from "effect";
+import { fal } from "@ai-sdk/fal";
 
 function base64ToUint8Array(base64: string) {
   const binaryString = atob(base64);
@@ -22,21 +23,26 @@ export const generateImages = internalAction({
     storageId: v.optional(v.id("_storage")),
     originalImageId: v.optional(v.id("images")),
     userId: v.string(),
+    url: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const program = Effect.gen(function* (_) {
-      const { prompt, imageWidth, imageHeight, originalImageId, userId } = args;
+      const { prompt, imageWidth, imageHeight, originalImageId, userId, url } = args;
 
-      // Generate images with Effect
       const result = yield* _(
         Effect.tryPromise({
           try: () =>
-            generateText({
-              model: google("gemini-2.5-flash-image-preview"),
-              providerOptions: {
-                google: { responseModalities: ["TEXT", "IMAGE"] },
+            generateImage({
+              model: fal.image("fal-ai/gemini-25-flash-image/edit"),
+              prompt: prompt,
+              // size: size,
+              // n: numberOfImages,
+              providerOptions : {
+                fal : {
+                  image_url: url ?? "",
+                }
               },
-              prompt,
+              
             }),
           catch: (error) => new Error(`Failed to generate Image: ${error}`),
         }),
@@ -45,20 +51,17 @@ export const generateImages = internalAction({
       const storedImages = [];
 
       // Process each file
-      for (const file of result.files) {
-        if (file.mediaType?.startsWith("image/")) {
-          const base64Data = file.base64.includes(",")
-            ? file.base64.split(",")[1]
-            : file.base64;
-
-          const bytes = base64ToUint8Array(base64Data);
-          const blob = new Blob([bytes], { type: file.mediaType });
-
-          const storageId = yield* _(
-            Effect.tryPromise({
-              try: () => ctx.storage.store(blob),
-              catch: (error) => new Error(`Failed to store image: ${error}`),
-            }),
+      for (const image of result.images) {
+        const storageId = yield* _(
+          Effect.tryPromise({
+            try: () => {
+              const copiedBytes = new Uint8Array(image.uint8Array);
+              return ctx.storage.store(
+                new Blob([copiedBytes], { type: image.mediaType }),
+              );
+            },
+            catch: () => new Error("Error while storing the images"),
+          }),
           );
 
           const url = yield* _(
@@ -68,7 +71,6 @@ export const generateImages = internalAction({
             }),
           );
 
-          // Fix: Use runMutation as an Effect
           yield* _(
             Effect.tryPromise({
               try: async (): Promise<void> => {
@@ -76,13 +78,14 @@ export const generateImages = internalAction({
                   body: storageId,
                   originalImageId: originalImageId,
                   prompt,
-                  model: "gemini-2.5-flash-image-preview",
+                  model: "fal-ai/gemini-25-flash-image/edit",
                   imageWidth: imageWidth ?? 1024,
                   imageHeight: imageHeight ?? 1024,
                   numberOfImages: 1,
                   status: "generated",
                   storageId: args.storageId,
                   userId: userId,
+                  url: url!,
                 });
               },
               catch: (error) => new Error(`Failed to save image: ${error}`),
@@ -91,14 +94,14 @@ export const generateImages = internalAction({
 
           storedImages.push({
             storageId,
-            mediaType: file.mediaType,
-            size: bytes.length,
+            mediaType: image.mediaType,
+            size: image.uint8Array.length,
             url,
           });
-        }
+        
       }
 
-      return storedImages;
+      //return storedImages;
     }).pipe(
       Effect.tapError((err) =>
         Effect.sync(() => console.error("Error in generateImages:", err)),
