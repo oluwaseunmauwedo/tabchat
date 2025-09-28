@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation } from "../_generated/server";
+import { Effect } from "effect"
 
 export const saveGeneratedImage = mutation({
   args: {
@@ -34,23 +35,37 @@ export const saveGeneratedImage = mutation({
       url,
     } = args;
 
-
-
-    const generatedImageId = await ctx.db.insert("images", {
-      prompt: prompt,
-      model: model,
-      imageWidth: imageWidth,
-      imageHeight: imageHeight,
-      numberOfImages: numberOfImages,
-      storageId: storageId,
-      createdAt: Date.now(),
-      status: status,
-      body: body,
-      userId: userId,
-      url: url,
-    });
-    return generatedImageId;
-  },
+    const program = Effect.gen(function* (_) {
+      const generatedImage = yield* _(
+        Effect.tryPromise({
+          try: async () => {
+            await ctx.db.insert("images", {
+              prompt: prompt,
+              model: model,
+              imageWidth: imageWidth,
+              imageHeight: imageHeight,
+              numberOfImages: numberOfImages,
+              storageId: storageId,
+              createdAt: Date.now(),
+              status: status,
+              body: body,
+              userId: userId,
+              url: url,
+            })
+          },
+          catch: () => new Error("Error while saving the generated Images")
+        })
+      )
+      return generatedImage
+    }).pipe(
+      Effect.tapError((err) => Effect.sync(() => console.error("Error in saveGeneratedImage:", err)))
+    )
+    try {
+      return await Effect.runPromise(program)
+    } catch {
+      throw new Error("Unknow error occured")
+    }
+  }
 });
 
 export const updateImageStatus = mutation({

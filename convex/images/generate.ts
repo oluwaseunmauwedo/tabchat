@@ -1,19 +1,9 @@
 import { v } from "convex/values";
 import { internalAction, mutation } from "../_generated/server";
-import { google } from "@ai-sdk/google";
 import { experimental_generateImage as generateImage } from "ai";
 import { api, internal } from "../_generated/api";
 import { Effect } from "effect";
 import { fal } from "@ai-sdk/fal";
-
-function base64ToUint8Array(base64: string) {
-  const binaryString = atob(base64);
-  const bytes = new Uint8Array(binaryString.length);
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-  return bytes;
-}
 
 export const generateImages = internalAction({
   args: {
@@ -42,7 +32,7 @@ export const generateImages = internalAction({
                   image_url: url ?? "",
                 }
               },
-              
+
             }),
           catch: (error) => new Error(`Failed to generate Image: ${error}`),
         }),
@@ -98,7 +88,7 @@ export const generateImages = internalAction({
             size: image.uint8Array.length,
             url,
           });
-        
+
       }
 
       //return storedImages;
@@ -112,6 +102,11 @@ export const generateImages = internalAction({
     try {
       return await Effect.runPromise(program);
     } catch (error) {
+      await ctx.runMutation(api.images.persist.updateImageStatus , {
+        imageId : args.originalImageId!,
+        status : "failed",
+        error : `Error while generating Images ${error}`
+      })
       console.error("Failed to execute generateImages program:", error);
       throw error;
     }

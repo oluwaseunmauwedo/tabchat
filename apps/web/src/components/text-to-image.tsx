@@ -15,7 +15,6 @@ import { imageRatios } from "@/utils/image-ratio"
 
 
 
-
 export default function ImageStudio({ images }: { images: Preloaded<typeof api.image.getImages> }) {
   const [prompt, setPrompt] = useState("")
   const [selectedImage, setSelectedImage] = useState<{ url: string; prompt: string } | null>(null)
@@ -53,6 +52,7 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
       url: url ?? ""
     })
     setPrompt("")
+
   }
 
   const imageSupport = models.find((m) => m.id === model)?.imageInput
@@ -117,7 +117,7 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
                       </Button>
                     </div>
                   </div>
-                
+
                 </div>
               </div>
               <div className="mt-4">
@@ -157,15 +157,16 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
                       </Button>
                     ))}
                   </div>
-                 
+
                 </div>
               </div>
-             
+
             </div>
           </div>
         </div>
 
         <div className="mt-20">
+
           {imagesData && Array.isArray(imagesData) && imagesData.some((img) => Boolean(img.url) && img.status === "generated") ? (
             <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
               {imagesData
@@ -193,9 +194,7 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
                   </div>
                 ))}
             </div>
-          ) : (
-            null
-          )}
+          ) : (null)}
         </div>
       </div>
 

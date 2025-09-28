@@ -86,10 +86,10 @@ export const generateImages = internalAction({
                 storageId: args.storageId,
                 userId: userId,
                 url: url ?? "",
-                
+
               });
             },
-            catch: () => new Error("Error while persit the data"),
+            catch: () => new Error("Error while persisting the data"),
           }),
         );
         storedImages.push({
@@ -107,6 +107,11 @@ export const generateImages = internalAction({
     try {
       return await Effect.runPromise(program);
     } catch (error) {
+      await ctx.runMutation(api.images.persist.updateImageStatus , {
+        imageId : args.originalImageId!,
+        status : "failed",
+        error : `Error while generating Images ${error}`
+      })
       console.error("Failed to execute generateImages program:", error);
       throw error;
     }
@@ -141,7 +146,7 @@ export const generationSchedules = mutation({
 
      yield* _(
       Effect.tryPromise({
-        try : () => 
+        try : () =>
             ctx.db.insert("images", {
             prompt: prompt,
             body: storageId,
@@ -158,7 +163,7 @@ export const generationSchedules = mutation({
       })
      )
 
-    
+
      yield* _(
       Effect.tryPromise({
         try: async (): Promise<void> => {
@@ -175,7 +180,7 @@ export const generationSchedules = mutation({
         catch : () => new Error("Error while running the instant scheduler")
       })
      )
-  
+
     }).pipe(
       Effect.tapError((err ) => Effect.sync(() => console.error("Error in generateImages:", err)))
     )
