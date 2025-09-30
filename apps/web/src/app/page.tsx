@@ -4,14 +4,38 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import UserProfile from "@/components/user-profile";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { Authenticated, Unauthenticated } from "convex/react";
+import { useEffect } from "react";
 
 const CircularGallery = dynamic(() => import("@/components/CircularGallery"), { ssr: true });
-import { ModeToggle } from "@/components/mode-toggle";
 
 export default function Home() {
+  const { data: session } = authClient.useSession()
+  const router = useRouter()
+  const user = session?.user
 
+  // Redirect authenticated users to /generate
+  useEffect(() => {
+    if (session?.user) {
+      router.push('/generate');
+    }
+  }, [session, router]);
 
   return (
+    <>
+      <Authenticated>
+        {/* This will redirect to /generate via useEffect above */}
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Redirecting...</p>
+          </div>
+        </div>
+      </Authenticated>
+      
+      <Unauthenticated>
     <div className="relative min-h-screen">
 
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -26,12 +50,12 @@ export default function Home() {
       </div>
 
 
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 flex items-center justify-between">
-        <Link href="/" className="inline-flex items-center gap-2">
-          <div className="size-6 rounded-full bg-gradient-to-tr from-primary/80 via-accent/70 to-foreground/80" />
-          <span className="text-sm font-medium tracking-widest text-muted-foreground">PICFLOW</span>
-        </Link>
-        <UserProfile />
+      <div className="fixed top-6 right-12 z-20 flex items-start">
+        {user ? <UserProfile /> : (
+          <Button asChild variant="outline" size="sm" className="rounded-full ">
+            <Link href="/login">Sign In</Link>
+          </Button>
+        )}
       </div>
 
 
@@ -64,14 +88,11 @@ export default function Home() {
 
 
             <div className="mt-14 lg:mt-20">
-              <div className="text-center space-y-2 mb-6">
-                <p className="text-sm text-muted-foreground">Drag or scroll to explore</p>
-              </div>
-
-              <div className="relative mx-auto max-w-5xl rounded-3xl border bg-gradient-to-br from-muted/30 to-muted/10 overflow-hidden">
+              <div className="relative mx-auto max-w-10xl  overflow-hidden">
                 <div className="h-[420px] sm:h-[520px] lg:h-[600px]">
                   <CircularGallery
                     items={[
+          
                       { image: 'https://curious-corgi-727.convex.cloud/api/storage/87a30c3d-0022-43be-a5bc-ba8b9009d4bd', text: '' },
                       { image: 'https://curious-corgi-727.convex.cloud/api/storage/133cadb2-abd4-4deb-b911-c8d94e161aa3', text: '' },
                       { image: 'https://curious-corgi-727.convex.cloud/api/storage/2eb8c85d-3f80-4beb-bdcb-1285c7485112', text: '' },
@@ -98,5 +119,7 @@ export default function Home() {
         </div>
       </div>
     </div>
+      </Unauthenticated>
+    </>
   );
 }

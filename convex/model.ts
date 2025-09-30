@@ -18,12 +18,6 @@ export const models = [
         description: "FLUX1.1 [pro] ultra is the newest version of FLUX1.1 [pro], maintaining professional-grade image quality while delivering up to 2K resolution with improved photo realism.",
     },
     {
-        id : "fal-ai/gemini-25-flash-image/edit",
-        name : "Gemini 2.5 Flash Image Edit",
-        imageInput : true,
-        description : "Gemini 2.5 Flash Image Edit is a model that can edit images based on text prompts.",
-    },
-    {
 
         id: "fal-ai/recraft/v3/text-to-image",
         name: "Recraft V3",
@@ -48,6 +42,18 @@ export const models = [
         imageInput: false,
         description: "Wan 2.2's 14B model generates high-resolution, photorealistic images with powerful prompt understanding and fine-grained visual detail"
 
+     },
+    //{
+    //   id : "fal-ai/nano-banana/edit",
+    //   name : "Nano Banana Edit",
+    //   imageInput : true,
+    //   description : "Google's state-of-the-art image generation and editing model"
+    // },
+    {
+        id : "fal-ai/flux-pro/kontext/multi",
+        name : "Flux Pro Kontext Multi",
+        imageInput : true,
+        description : "Experimental version of FLUX.1 Kontext [pro] with multi image handling capabilities"
     }, {
 
         id: "fal-ai/flux-pro/kontext",
@@ -55,22 +61,11 @@ export const models = [
         imageInput: true,
         description: "FLUX.1 Image-to-Image is a high-performance endpoint for the FLUX.1 [dev] model that enables rapid transformation of existing images, delivering high-quality style transfers and image modifications with the core FLUX capabilities."
     },
-    {
-        id: "fal-ai/wan-25-preview/image-to-image",
-        name: "WAN 2.5 Preview Image-to-Image",
-        imageInput: true,
-        description: "Wan 2.5 image-to-image model."
-    }, {
-        id: "fal-ai/flux-krea-lora/stream",
-        name: "Flux Krea Lora Stream",
-        imageInput: true,
-        description: "Flux Krea Lora Stream model."
-    },
-    {
-        id: "fal-ai/imagen4/preview",
-        name: "Imagen 4 Preview",
-        imageInput: true,
-        description: "Imagen 4 Preview model."
-    }
+    // {
+    //     id: "fal-ai/wan-25-preview/image-to-image",
+    //     name: "WAN 2.5 Preview Image-to-Image",
+    //     imageInput: true,
+    //     description: "Wan 2.5 image-to-image model."
+    // }
 
 ]

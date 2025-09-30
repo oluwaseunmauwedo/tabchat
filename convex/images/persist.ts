@@ -70,7 +70,7 @@ export const saveGeneratedImage = mutation({
 
 export const updateImageStatus = mutation({
   args: {
-    imageId: v.id("images"),
+    imageId: v.optional(v.id("images")),
     status: v.union(
       v.literal("pending"),
       v.literal("generated"),
@@ -84,6 +84,6 @@ export const updateImageStatus = mutation({
 
     const updateData = { status, error};
 
-    await ctx.db.patch(imageId, updateData);
+    await ctx.db.patch(imageId!, updateData);
   },
 });

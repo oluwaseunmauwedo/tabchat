@@ -35,7 +35,7 @@ export const generateImages = internalAction({
         Effect.tryPromise({
           try: () =>
             generateImage({
-              model: fal.image(model!),
+              model: fal.image(model),
               prompt: prompt,
               size: size,
               n: numberOfImages,
@@ -107,11 +107,11 @@ export const generateImages = internalAction({
     try {
       return await Effect.runPromise(program);
     } catch (error) {
-      await ctx.runMutation(api.images.persist.updateImageStatus , {
-        imageId : args.originalImageId!,
-        status : "failed",
-        error : `Error while generating Images ${error}`
-      })
+      // await ctx.runMutation(api.images.persist.updateImageStatus , {
+      //   imageId : args.originalImageId!,
+      //   status : "failed",
+      //   error : `Error while generating Images ${error}`
+      // })
       console.error("Failed to execute generateImages program:", error);
       throw error;
     }
