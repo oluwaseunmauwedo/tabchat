@@ -58,6 +58,7 @@ export function Sidepanel() {
     });
     
     const createThread = useMutation(api.thread.createNewThread);
+    const [isCreatingThread, setIsCreatingThread] = useState(false);
 
     // Get active thread from URL hash
     useEffect(() => {
@@ -86,17 +87,25 @@ export function Sidepanel() {
     };
 
     const handleNewChat = async () => {
-        const newThreadId = await createThread({
-            title: "New thread",
-        });
-        if (pathname === "/chat") {
-            // If already on chat page, just update hash directly (this triggers hashchange event)
-            window.location.hash = `#${newThreadId}`;
-            setActiveThreadId(newThreadId as string);
-        } else {
-            // Otherwise navigate to chat page with hash
-            router.push(`/chat#${newThreadId}`);
-            setActiveThreadId(newThreadId as string);
+        // Prevent multiple rapid clicks
+        if (isCreatingThread) return;
+        
+        setIsCreatingThread(true);
+        try {
+            const newThreadId = await createThread({
+                title: "New thread",
+            });
+            if (pathname === "/chat") {
+                // If already on chat page, just update hash directly (this triggers hashchange event)
+                window.location.hash = `#${newThreadId}`;
+                setActiveThreadId(newThreadId as string);
+            } else {
+                // Otherwise navigate to chat page with hash
+                router.push(`/chat#${newThreadId}`);
+                setActiveThreadId(newThreadId as string);
+            }
+        } finally {
+            setIsCreatingThread(false);
         }
     };
 
@@ -153,10 +162,15 @@ export function Sidepanel() {
                             variant="ghost"
                             size="icon"
                             onClick={handleNewChat}
+                            disabled={isCreatingThread}
                             className="h-7 w-7 rounded-md hover:bg-muted"
                             title="New Chat"
                         >
-                            <Plus className="h-4 w-4" />
+                            {isCreatingThread ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                                <Plus className="h-4 w-4" />
+                            )}
                         </Button>
                     </div>
                     <SidebarGroupContent className="flex-1 min-h-0 overflow-hidden">
@@ -172,9 +186,14 @@ export function Sidepanel() {
                                         variant="ghost"
                                         size="sm"
                                         onClick={handleNewChat}
+                                        disabled={isCreatingThread}
                                         className="mt-2"
                                     >
-                                        <Plus className="h-3 w-3 mr-1" />
+                                        {isCreatingThread ? (
+                                            <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                        ) : (
+                                            <Plus className="h-3 w-3 mr-1" />
+                                        )}
                                         New Chat
                                     </Button>
                                 </div>
