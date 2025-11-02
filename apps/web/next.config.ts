@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -14,6 +15,18 @@ const nextConfig: NextConfig = {
         hostname: "lh3.googleusercontent.com",
       },
     ],
+  },
+  turbopack: {
+    resolveAlias: {
+      "@imageflow/convex": path.resolve(__dirname, "../../convex"),
+    },
+  },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@imageflow/convex": path.resolve(__dirname, "../../convex"),
+    };
+    return config;
   },
 };
 

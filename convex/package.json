@@ -5,7 +5,7 @@
     "type": "module",
   "devDependencies": {
         "convex": "latest",
-    "@types/bun": "latest"
+        "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"

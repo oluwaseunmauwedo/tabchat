@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils"
 
-function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
+function Skeleton({ className, ref, ...props }: React.ComponentProps<"div"> & { ref?: React.RefObject<HTMLDivElement> } ) {
   return (
-    <div
+    <div ref={ref}
       data-slot="skeleton"
       className={cn("bg-accent animate-pulse rounded-md", className)}
       {...props}

@@ -1,11 +1,12 @@
 "use client"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
+    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
@@ -18,6 +19,11 @@ import { ModeToggle } from "@/components/mode-toggle"
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { api } from "@imageflow/convex/_generated/api";
+import { useQuery, useMutation } from "convex/react";
+import { MessageSquare, Plus, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ScrollArea } from "./ui/scroll-area";
 
 function SidebarThemeToggleWrapper() {
     const { state, setOpen, isMobile, setOpenMobile } = useSidebar()
@@ -38,6 +44,62 @@ function SidebarThemeToggleWrapper() {
 export function Sidepanel() {
     const router = useRouter();
     const pathname = usePathname();
+    const [activeThreadId, setActiveThreadId] = useState<string | undefined>();
+    
+    const threads = useQuery(api.thread.listThreads, {
+        paginationOpts: {
+            endCursor: null,
+            numItems: 50,
+            cursor: null,
+            id: undefined,
+            maximumRowsRead: 50,
+            maximumBytesRead: 1000000,
+        },
+    });
+    
+    const createThread = useMutation(api.thread.createNewThread);
+
+    // Get active thread from URL hash
+    useEffect(() => {
+        const updateActiveThread = () => {
+            if (typeof window !== "undefined") {
+                const hash = window.location.hash.replace(/^#/, "");
+                setActiveThreadId(hash || undefined);
+            }
+        };
+        
+        updateActiveThread();
+        window.addEventListener("hashchange", updateActiveThread);
+        return () => window.removeEventListener("hashchange", updateActiveThread);
+    }, [pathname]);
+
+    const handleThreadClick = (threadId: string) => {
+        if (pathname === "/chat") {
+            // If already on chat page, just update hash directly (this triggers hashchange event)
+            window.location.hash = `#${threadId}`;
+            setActiveThreadId(threadId);
+        } else {
+            // Otherwise navigate to chat page with hash
+            router.push(`/chat#${threadId}`);
+            setActiveThreadId(threadId);
+        }
+    };
+
+    const handleNewChat = async () => {
+        const newThreadId = await createThread({
+            title: "New thread",
+        });
+        if (pathname === "/chat") {
+            // If already on chat page, just update hash directly (this triggers hashchange event)
+            window.location.hash = `#${newThreadId}`;
+            setActiveThreadId(newThreadId as string);
+        } else {
+            // Otherwise navigate to chat page with hash
+            router.push(`/chat#${newThreadId}`);
+            setActiveThreadId(newThreadId as string);
+        }
+    };
+
     return (
         <Sidebar
             variant="inset"
@@ -47,13 +109,13 @@ export function Sidepanel() {
             <SidebarRail />
             <SidebarHeader className="sp-header relative">
                 
-            <h1 className="text-5xl sm:text-6xl px-10 py-3 lg:text-2xl xl:text-3xl font-bold tracking-tight leading-[0.9]">
+            <h1 className="text-lg sm:text-lg px-10 py-3 lg:text-xl xl:text-2xl font-bold tracking-tight leading-tight">
                 <Link href="/">
-                <span className="bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent">
-                  picflow
-                </span>
+                  <span className="bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent">
+                    chatbetter
+                  </span>
                 </Link>
-              </h1>
+            </h1>
                 <div className="absolute -top-2 -right-2 w-16 h-16 bg-sidebar rounded-bl-[2rem] border-l border-b border-border">
                     <div className="absolute top-3 right-3">
                         <SidebarThemeToggleWrapper />
@@ -62,7 +124,7 @@ export function Sidepanel() {
             </SidebarHeader>
   
         
-            <SidebarContent className="sp-content px-2 py-2 overflow-hidden">
+            <SidebarContent className="sp-content px-2 py-2 overflow-hidden flex flex-col">
             <div className="flex items-center justify-end px-2 pb-2">
                 <SidebarTrigger className="h-7 w-7 rounded-md hover:bg-muted transition-colors" />
             </div>
@@ -76,7 +138,71 @@ export function Sidepanel() {
                             <SidebarMenuButton onClick={() => router.push("/gallery")} className="rounded-md" tooltip="Image to Image" data-active={pathname === "/gallery"}>
                                 <span>Gallery</span>
                             </SidebarMenuButton>
+
                         </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+                
+                <SidebarSeparator />
+                <SidebarGroup className="flex-1 min-h-0 flex flex-col">
+                    <div className="flex items-center justify-between px-2 py-1.5">
+                        <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground">
+                            Threads
+                        </SidebarGroupLabel>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={handleNewChat}
+                            className="h-7 w-7 rounded-md hover:bg-muted"
+                            title="New Chat"
+                        >
+                            <Plus className="h-4 w-4" />
+                        </Button>
+                    </div>
+                    <SidebarGroupContent className="flex-1 min-h-0 overflow-hidden">
+                        <ScrollArea className="h-full">
+                            {threads === undefined ? (
+                                <div className="flex items-center justify-center py-8">
+                                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                                </div>
+                            ) : threads?.page.length === 0 ? (
+                                <div className="px-2 py-4 text-center">
+                                    <p className="text-sm text-muted-foreground">No threads yet</p>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={handleNewChat}
+                                        className="mt-2"
+                                    >
+                                        <Plus className="h-3 w-3 mr-1" />
+                                        New Chat
+                                    </Button>
+                                </div>
+                            ) : (
+                                <SidebarMenu className="space-y-1">
+                                    {threads.page.map((thread) => {
+                                        const isActive = activeThreadId === thread._id;
+                                        const displayText = thread.title || thread.summary || "Untitled Chat";
+                                        return (
+                                            <SidebarMenuButton
+                                                key={thread._id}
+                                                onClick={() => handleThreadClick(thread._id)}
+                                                className={cn(
+                                                    "rounded-md justify-start h-auto py-2 px-3 group",
+                                                    isActive && "bg-primary/10 text-primary font-medium"
+                                                )}
+                                                tooltip={displayText}
+                                            >
+                                                <MessageSquare className="h-4 w-4 mr-2 flex-shrink-0" />
+                                                <span className="truncate text-sm flex-1 text-left">
+                                                    {displayText}
+                                                </span>
+                                            </SidebarMenuButton>
+                                        );
+                                    })}
+                                </SidebarMenu>
+                            )}
+                        </ScrollArea>
                     </SidebarGroupContent>
                 </SidebarGroup>
                

@@ -3,6 +3,6 @@ import { createAuth } from "@imageflow/convex/auth";
 import { getToken as getTokenNextjs } from "@convex-dev/better-auth/nextjs";
 
 export const getToken = () => {
-    getStaticAuth(createAuth);
-  return getTokenNextjs(createAuth);
+    getStaticAuth(createAuth as any);
+  return getTokenNextjs(createAuth as any);
 };
