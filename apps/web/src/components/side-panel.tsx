@@ -20,7 +20,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { api } from "@imageflow/convex/_generated/api";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useConvexAuth } from "convex/react";
 import { MessageSquare, Plus, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "./ui/scroll-area";
@@ -45,6 +45,7 @@ export function Sidepanel() {
     const router = useRouter();
     const pathname = usePathname();
     const [activeThreadId, setActiveThreadId] = useState<string | undefined>();
+    const { isAuthenticated } = useConvexAuth();
     
     const threads = useQuery(api.thread.listThreads, {
         paginationOpts: {
@@ -88,7 +89,7 @@ export function Sidepanel() {
 
     const handleNewChat = async () => {
         // Prevent multiple rapid clicks
-        if (isCreatingThread) return;
+        if (isCreatingThread || !isAuthenticated) return;
         
         setIsCreatingThread(true);
         try {
@@ -121,7 +122,7 @@ export function Sidepanel() {
             <h1 className="text-lg sm:text-lg px-10 py-3 lg:text-xl xl:text-2xl font-bold tracking-tight leading-tight">
                 <Link href="/">
                   <span className="bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent">
-                    chatbetter
+                    tab.chat
                   </span>
                 </Link>
             </h1>
@@ -162,9 +163,9 @@ export function Sidepanel() {
                             variant="ghost"
                             size="icon"
                             onClick={handleNewChat}
-                            disabled={isCreatingThread}
+                            disabled={isCreatingThread || !isAuthenticated}
                             className="h-7 w-7 rounded-md hover:bg-muted"
-                            title="New Chat"
+                            title={isAuthenticated ? "New Chat" : "Sign in to create a new chat"}
                         >
                             {isCreatingThread ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -186,7 +187,7 @@ export function Sidepanel() {
                                         variant="ghost"
                                         size="sm"
                                         onClick={handleNewChat}
-                                        disabled={isCreatingThread}
+                                        disabled={isCreatingThread || !isAuthenticated}
                                         className="mt-2"
                                     >
                                         {isCreatingThread ? (

@@ -10,13 +10,22 @@ import { paginationOptsValidator } from "convex/server";
 
 
 export const initiateAsyncStreaming = mutation({
-    args: { prompt: v.string(), threadId: v.string() , model: v.string() },
-    handler: async (ctx, { prompt, threadId, model }) => {
+    args: { prompt: v.string(), threadId: v.string() , model: v.string() , url: v.optional(v.string()) },
+    handler: async (ctx, { prompt, threadId, model, url }) => {
       await authorizeThreadAccess(ctx, threadId);
       const { messageId } = await chatBetterAgent(model).saveMessage(ctx, {
         threadId,
-        prompt,
+        //prompt,
         skipEmbeddings: true,
+        message: {
+          role: "user",
+          content: url
+            ? [{type: "image", image: url, mimeType: "image/png"}, { type: "text", text: prompt }]
+            : [{ type: "text", text: prompt }],
+        },
+      //  metadata: {
+      //   fileIds: [url ? url : ""],
+      //  },
       });
       await ctx.scheduler.runAfter(0, internal.chatStreaming.streamAsync, {
         threadId,

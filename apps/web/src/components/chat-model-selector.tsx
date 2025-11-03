@@ -8,6 +8,8 @@ const PROVIDER_LABELS: Record<string, string> = {
     google: "Google",
     xai: "xAI",
     zai: "Zai",
+    deepseek: "DeepSeek",
+    perplexity: "Perplexity",
 };
 
 function getProvider(id: string) {
@@ -37,8 +39,8 @@ export default function ChatModelSelector({ model, setModel }: { model: string; 
             <SelectTrigger
                 size="sm"
                 className={cn(
-                    "h-8 px-3 text-xs font-medium rounded-xl shadow-xs bg-background/60 border-border/60 hover:bg-background/80 hover:border-border",
-                    "focus:ring-1 focus:ring-ring/50 focus:ring-offset-0"
+                    "h-8 px-3 text-xs font-medium rounded-xl shadow-xs bg-transparent !border-0 hover:bg-transparent",
+                    "focus-visible:border-0 focus-visible:ring-0"
                 )}
             >
                 <SelectValue>
