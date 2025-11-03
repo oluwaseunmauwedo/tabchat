@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { StopCircle, ArrowUp } from "lucide-react";
+import { Square, ArrowUp } from "lucide-react";
 import ChatModelSelector from "@/components/chat-model-selector";
 
 import { chatModel } from "@imageflow/convex/chatModel";
@@ -134,7 +134,7 @@ function Story({ threadId }: { threadId: string }) {
 
   return (
     <div className="flex-1 flex flex-col max-w-5xl mx-auto w-full px-4 md:px-6 overflow-hidden">
-      {/* Messages area */}
+
       <Conversation className="flex-1">
         <ConversationContent className="pt-16 pb-6">
           <div className="max-w-[80%] mx-auto space-y-3">
@@ -198,7 +198,7 @@ function Story({ threadId }: { threadId: string }) {
                     onClick={handleAbort}
                     className="h-9 w-9 rounded-lg shadow-md transition-all hover:scale-105 hover:shadow-lg"
                   >
-                    <StopCircle className="h-4 w-4" />
+                    <Square className="h-3 w-3 fill-current" />
                   </Button>
                 ) : (
                   <Button
