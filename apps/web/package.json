@@ -2,8 +2,8 @@
   "name": "web",
   "private": true,
   "scripts": {
-    "dev": "bun run --bun next dev",
-    "build": "bun run --bun next build",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "type-check": "tsc --noEmit",
     "type-check:watch": "tsc --noEmit --watch",
@@ -12,7 +12,7 @@
   "dependencies": {
     "@ai-sdk/fal": "^1.0.20",
     "@ai-sdk/google": "^2.0.26",
-    "@ai-sdk/openai": "^2.0.59",
+    "@ai-sdk/openai": "^2.0.60",
     "@convex-dev/agent": "^0.2.12",
     "@convex-dev/better-auth": "^0.9.6",
     "@convex-dev/r2": "^0.7.3",
@@ -52,7 +52,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
-    "convex": "^1.28.0",
+    "convex": "^1.28.2",
     "date-fns": "^4.1.0",
     "effect": "^3.18.4",
     "embla-carousel-react": "^8.6.0",
