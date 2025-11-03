@@ -1,11 +1,11 @@
 {
-  "name": "@imageflow/convex",
+  "name": "convex",
   "private": true,
-    "version": "0.0.0",
-    "type": "module",
+  "version": "0.0.0",
+  "type": "module",
   "devDependencies": {
-        "convex": "latest",
-        "@types/bun": "latest"
+    "convex": "latest",
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
