@@ -1,8 +1,4 @@
-export const chatModel = [{
-    id: "openai/gpt-5",
-    name: "GPT-5",
-    description: "OpenAI's latest flagship model with advanced reasoning and multimodal capabilities.",
-}, {
+export const chatModel = [ {
     id: "openai/gpt-5-mini",
     name: "GPT-5 Mini",
     description: "Fast and efficient version of GPT-5, optimized for speed and cost.",
@@ -10,6 +6,10 @@ export const chatModel = [{
     id: "openai/gpt-5-nano",
     name: "GPT-5 Nano",
     description: "Lightweight and ultra-fast variant perfect for quick responses.",
+},{
+    id: "openai/gpt-5",
+    name: "GPT-5",
+    description: "OpenAI's latest flagship model with advanced reasoning and multimodal capabilities.",
 }, {
     id: "openai/gpt-4o",
     name: "GPT-4o",
@@ -35,6 +35,10 @@ export const chatModel = [{
     id: "anthropic/claude-sonnet-4.5",
     name: "Claude Sonnet 4.5",
     description: "Enhanced Sonnet with improved reasoning and knowledge.",
+}, {
+    id : "anthropic/claude-3.5-haiku",
+    name : "Claude 3.5 Haiku",
+    description : "Claude 3.5 Haiku is a fast and efficient model for quick responses.",
 }, {
     id: "google/gemini-2.5-flash",
     name: "Gemini 2.5 Flash",
@@ -85,6 +89,10 @@ export const chatModel = [{
     id : "perplexity/sonar-reasoning",
     name : "Sonar Reasoning",
     description : "Enhanced Sonar with advanced reasoning and deeper analysis.",
+} , {
+    id : "minimax/minimax-m2",
+    name : "Minimax M2",
+    description : "MiniMax-M2 redefines efficiency for agents. It is a compact, fast, and cost-effective MoE model",
 }
 
 ]

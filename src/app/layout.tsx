@@ -38,7 +38,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <SidebarProvider defaultOpen={false} >
+            <SidebarProvider defaultOpen={true} >
 
               <Sidepanel  />
               <SidebarFloatingTrigger />

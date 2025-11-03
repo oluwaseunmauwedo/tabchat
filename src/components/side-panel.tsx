@@ -155,22 +155,28 @@ export function Sidepanel() {
                 
                 <SidebarSeparator />
                 <SidebarGroup className="flex-1 min-h-0 flex flex-col">
-                    <div className="flex items-center justify-between px-2 py-1.5">
+                    <div className="flex flex-col px-2 py-1.5 gap-2 pb-4">
                         <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground">
                             Threads
                         </SidebarGroupLabel>
                         <Button
-                            variant="ghost"
-                            size="icon"
+                            variant="secondary"
+                            size="sm"
                             onClick={handleNewChat}
                             disabled={isCreatingThread || !isAuthenticated}
-                            className="h-7 w-7 rounded-md hover:bg-muted"
-                            title={isAuthenticated ? "New Chat" : "Sign in to create a new chat"}
+                            className="h-7 rounded-md w-full justify-center"
+                            title={isAuthenticated ? "New Thread" : "Sign in to create a new thread"}
                         >
                             {isCreatingThread ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
+                                <>
+                                    <Loader2 className="h-3 w-3 mr-1.5 animate-spin" />
+                                    <span>New Thread</span>
+                                </>
                             ) : (
-                                <Plus className="h-4 w-4" />
+                                <>
+                                    <Plus className="h-3 w-3 mr-1.5" />
+                                    <span>New Thread</span>
+                                </>
                             )}
                         </Button>
                     </div>
@@ -202,7 +208,7 @@ export function Sidepanel() {
                                 <SidebarMenu className="space-y-1">
                                     {threads.page.map((thread) => {
                                         const isActive = activeThreadId === thread._id;
-                                        const displayText = thread.title || thread.summary || "Untitled Chat";
+                                        const displayText = thread.title || "Untitled Chat";
                                         return (
                                             <SidebarMenuButton
                                                 key={thread._id}

@@ -59,20 +59,20 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
 
   return (
     <div className="h-full relative text-foreground">
-      <div className="relative max-w-6xl mx-auto px-6 py-14 z-10">
-        <div className="mb-12 text-center animate-fade-in-up">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-14 z-10">
+        <div className="mb-8 sm:mb-10 md:mb-12 text-center animate-fade-in-up">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground">
             Generate Your Unique Digital Art
           </h2>
-          <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="mt-3 sm:mt-4 text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-2">
             Describe your dream, and we&apos;ll <span className="font-semibold">bring it to life</span>.
           </p>
         </div>
         <div className="mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
 
             <div className="lg:col-span-2">
-              <div className="relative group p-4 -m-4">
+              <div className="relative group p-2 sm:p-4 -m-2 sm:-m-4">
                 <div className="absolute inset-0 bg-gradient-to-r from-card/10 via-card/20 to-card/10 backdrop-blur-2xl rounded-t-3xl -z-10 opacity-60 transition-all duration-700"></div>
                 <div className="absolute inset-1 bg-card/5 backdrop-blur-xl rounded-2xl -z-10 opacity-0 transition-all duration-500"></div>
                 <div className="pointer-events-none absolute -inset-4 rounded-[28px] bg-gradient-to-r from-primary/30 via-primary/10 to-transparent blur-3xl -z-20 opacity-40 transition-opacity duration-700"></div>
@@ -83,14 +83,15 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
                     onChange={(e) => setPrompt(e.target.value)}
                     placeholder="Write your prompt here... (e.g. A neon city with flying cars)"
                     className="w-full rounded-t-3xl bg-card border-0
-                    text-sm md:text-base leading-relaxed placeholder-muted-foreground text-foreground p-3 md:p-4 pr-28 md:pr-44 pb-16 md:pb-20 min-h-[120px] md:min-h-[160px] max-h-[60vh] resize-y
+                    text-sm md:text-base leading-relaxed placeholder-muted-foreground text-foreground p-3 sm:p-4 
+                    pr-3 sm:pr-28 md:pr-44 pb-24 sm:pb-16 md:pb-20 min-h-[140px] sm:min-h-[120px] md:min-h-[160px] max-h-[60vh] resize-y
                     focus-visible:outline-none focus-visible:ring-0 focus-visible:border-0
                     transition-all duration-300
                     shadow-inner relative z-10"
                   />
 
-                  <div className="pointer-events-none absolute bottom-2 right-2 md:bottom-4 md:right-4 z-20">
-                    <div className="flex items-center gap-2 md:gap-3 pointer-events-auto whitespace-nowrap">
+                  <div className="pointer-events-none absolute bottom-2 right-2 sm:bottom-2 md:bottom-4 sm:right-2 md:right-4 z-20">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 md:gap-3 pointer-events-auto">
                       <RatioSelector
                         selectedRatio={selectedRatio}
                         setSelectedRatio={setSelectedRatio}
@@ -101,16 +102,17 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
                       <Button
                         onClick={handleGenerate}
                         disabled={!prompt.trim() || (imageSupport && !url)}
-                        className="h-9 md:h-10 px-3 md:px-4 rounded-xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80
-                        text-primary-foreground font-medium text-xs md:text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed
+                        className="h-8 sm:h-9 md:h-10 px-2.5 sm:px-3 md:px-4 rounded-xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80
+                        text-primary-foreground font-medium text-xs sm:text-xs md:text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed
                         shadow-lg hover:shadow-xl focus:shadow-xl hover:scale-[1.02] focus:scale-[1.02]
-                        border border-primary/20 hover:border-primary/30 backdrop-blur-sm overflow-hidden"
+                        border border-primary/20 hover:border-primary/30 backdrop-blur-sm overflow-hidden touch-manipulation"
                         aria-label="Generate image"
                       >
 
-                        <div className="relative z-10 flex items-center gap-1.5 md:gap-2">
-                          <span>Generate</span>
-                          <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="relative z-10 flex items-center gap-1 sm:gap-1.5 md:gap-2">
+                          <span className="hidden sm:inline">Generate</span>
+                          <span className="sm:hidden">Go</span>
+                          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                           </svg>
                         </div>
@@ -120,7 +122,7 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
 
                 </div>
               </div>
-              <div className="mt-4">
+              <div className="mt-3 sm:mt-4">
                 {imageSupport && (
                   <ImageUploader value={url} onChange={setUrl} size={56} className="w-full" />
                 )}
@@ -129,15 +131,15 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
 
 
             <div className="lg:col-span-1">
-              <div className="sticky top-6">
-                <div className="bg-card/30 backdrop-blur-xl rounded-2xl border border-border/50 p-4 shadow-lg">
-                  <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="sticky top-4 sm:top-6">
+                <div className="bg-card/30 backdrop-blur-xl rounded-2xl border border-border/50 p-3 sm:p-4 shadow-lg">
+                  <h3 className="text-xs sm:text-sm font-semibold text-foreground mb-2 sm:mb-3 flex items-center gap-2">
+                    <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
                     </svg>
                     Prompt Inspiration
                   </h3>
-                  <div className="space-y-2 max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                  <div className="space-y-1.5 sm:space-y-2 max-h-[200px] sm:max-h-[250px] md:max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
                     {presets.map((p, index) => (
                       <Button
                         key={p}
@@ -145,11 +147,11 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
                         size="sm"
                         className="w-full justify-start text-left rounded-xl border border-border/30 bg-background/50 text-foreground/80
                         hover:bg-accent hover:text-accent-foreground hover:border-primary/30 transition-all duration-200
-                        px-3 py-2 h-auto whitespace-normal text-sm leading-relaxed group"
+                        px-2.5 sm:px-3 py-1.5 sm:py-2 h-auto whitespace-normal text-xs sm:text-sm leading-relaxed group touch-manipulation"
                         onClick={() => setPrompt(p)}
                       >
-                        <div className="flex items-start gap-2">
-                          <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-medium group-hover:bg-primary/20 transition-colors">
+                        <div className="flex items-start gap-1.5 sm:gap-2">
+                          <span className="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primary/10 text-primary text-[10px] sm:text-xs font-medium group-hover:bg-primary/20 transition-colors flex-shrink-0">
                             {index + 1}
                           </span>
                           <span className="flex-1">{p.split(",")[0]}...</span>
@@ -165,16 +167,16 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
           </div>
         </div>
 
-        <div className="mt-20">
+        <div className="mt-12 sm:mt-16 md:mt-20">
 
           {imagesData && Array.isArray(imagesData) && imagesData.some((img) => Boolean(img.url) && img.status === "generated") ? (
-            <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
+            <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-3 sm:gap-4 space-y-3 sm:space-y-4">
               {imagesData
                 .filter((img) => Boolean(img.url) && img.status === "generated")
                 .map((image, idx: number) => (
                   <div
                     key={image._id}
-                    className={`break-inside-avoid cursor-pointer animate-fade-in-up`}
+                    className={`break-inside-avoid cursor-pointer animate-fade-in-up touch-manipulation`}
                     style={{ animationDelay: `${idx * 100}ms` }}
                     onClick={() => setSelectedImage({ url: image.url!, prompt: image.prompt })}
                   >
@@ -184,12 +186,12 @@ export default function ImageStudio({ images }: { images: Preloaded<typeof api.i
                         alt={image.prompt}
                         width={300}
                         height={300}
-                        className="w-full h-auto object-cover rounded-lg shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+                        className="w-full h-auto object-cover rounded-lg shadow-md hover:shadow-xl active:shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                         quality={85}
                         loading="lazy"
                         unoptimized
                       />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 rounded-lg"></div>
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 active:bg-black/5 transition-all duration-300 rounded-lg"></div>
                     </div>
                   </div>
                 ))}

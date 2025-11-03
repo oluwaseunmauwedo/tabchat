@@ -39,50 +39,67 @@ export default function ChatModelSelector({ model, setModel }: { model: string; 
             <SelectTrigger
                 size="sm"
                 className={cn(
-                    "h-8 px-3 text-xs font-medium rounded-xl shadow-xs bg-transparent !border-0 hover:bg-transparent",
-                    "focus-visible:border-0 focus-visible:ring-0"
+                    "h-8 px-3 text-xs font-medium rounded-xl border border-sidebar-border/60",
+                    "bg-gradient-to-r from-sidebar/70 via-sidebar/60 to-sidebar/70 text-sidebar-foreground/90 shadow-sm backdrop-blur",
+                    "transition-all duration-300 hover:border-sidebar-border/40 hover:shadow-md data-[state=open]:shadow-lg data-[state=open]:border-sidebar-primary/50",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-primary/40 focus-visible:border-sidebar-primary/60"
                 )}
             >
                 <SelectValue>
-                    <span className="truncate max-w-[12rem]">
+                    <span className="truncate max-w-[12rem] text-sidebar-foreground/90">
                         {selectedModelData?.name || "Select model"}
                     </span>
                 </SelectValue>
             </SelectTrigger>
-            <SelectContent className="w-[320px] max-w-[calc(100vw-2rem)] md:w-[480px] max-h-[80vh] overflow-y-auto rounded-xl">
-                {providersOrder.map((provider, pIdx) => (
-                    <div key={provider}>
-                        <SelectGroup>
-                            <SelectLabel className="px-2 py-1.5 text-[11px] tracking-wide uppercase">
-                                {PROVIDER_LABELS[provider] || provider}
-                            </SelectLabel>
+            <SelectContent
+                className={cn(
+                    "w-[320px] max-w-[calc(100vw-2rem)] md:w-[480px] max-h-[80vh] overflow-y-auto rounded-xl border border-sidebar-border/50",
+                    "bg-gradient-to-br from-sidebar/95 via-sidebar/90 to-sidebar/95 shadow-2xl backdrop-blur-xl p-2",
+                    "scrollbar-thin scrollbar-thumb-sidebar-border/60 scrollbar-track-transparent"
+                )}
+            >
+                <div className="space-y-3">
+                    {providersOrder.map((provider) => (
+                        <div
+                            key={provider}
+                            className="rounded-xl border border-sidebar-border/40 bg-gradient-to-br from-sidebar/80 via-sidebar/75 to-sidebar/80 shadow-inner shadow-black/5"
+                        >
+                            <SelectGroup>
+                                <SelectLabel className="px-3 py-2 text-[11px] tracking-wide uppercase text-sidebar-foreground/60">
+                                    {PROVIDER_LABELS[provider] || provider}
+                                </SelectLabel>
 
-                            <div className="grid grid-cols-2 gap-2 p-2">
-                                {groups[provider]?.map((modelOption) => (
-                                    <SelectItem
-                                        key={modelOption.id}
-                                        value={modelOption.id}
-                                        className={cn(
-                                            "w-auto h-auto min-h-[80px] items-start justify-start rounded-lg border bg-card/70 hover:bg-card py-2.5 pr-8 pl-2.5 text-left",
-                                            "transition-[background,box-shadow,border-color] border-border/60 hover:border-border shadow-xs hover:shadow-sm",
-                                            "data-[state=checked]:ring-1 data-[state=checked]:ring-ring data-[highlighted]:border-primary/30"
-                                        )}
-                                    >
-                                        <div className="flex flex-col gap-1.5">
-                                            <span className="text-sm font-medium leading-none">{modelOption.name}</span>
-                                            {modelOption.description ? (
-                                                <span className="text-xs text-muted-foreground leading-relaxed line-clamp-3 text-pretty">
-                                                    {modelOption.description}
+                                <div className="grid grid-cols-2 gap-2 p-2 pt-0">
+                                    {groups[provider]?.map((modelOption) => (
+                                        <SelectItem
+                                            key={modelOption.id}
+                                            value={modelOption.id}
+                                            className={cn(
+                                                "relative w-auto h-auto min-h-[84px] items-start justify-start rounded-lg text-left overflow-hidden",
+                                                "border border-sidebar-border/40 bg-sidebar/60 text-sidebar-foreground/90 shadow-xs",
+                                                "pl-3 pr-9 py-2.5 transition-all duration-300 hover:border-sidebar-border/20 hover:bg-sidebar/70 hover:shadow-sm",
+                                                "before:absolute before:inset-0 before:content-[''] before:bg-gradient-to-br before:from-sidebar-primary/10 before:via-sidebar-accent/10 before:to-transparent before:opacity-0 before:transition-opacity before:duration-300",
+                                                "hover:before:opacity-100 data-[highlighted]:before:opacity-100",
+                                                "data-[state=checked]:border-sidebar-primary/60 data-[state=checked]:shadow-md data-[state=checked]:before:opacity-100 data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-sidebar/70 data-[state=checked]:to-sidebar-accent/20"
+                                            )}
+                                        >
+                                            <div className="relative z-10 flex flex-col gap-1.5">
+                                                <span className="text-sm font-medium leading-none text-sidebar-foreground">
+                                                    {modelOption.name}
                                                 </span>
-                                            ) : null}
-                                        </div>
-                                    </SelectItem>
-                                ))}
-                            </div>
-                        </SelectGroup>
-                        {pIdx < providersOrder.length - 1 ? <div className="h-2" /> : null}
-                    </div>
-                ))}
+                                                {modelOption.description ? (
+                                                    <span className="text-xs text-sidebar-foreground/70 leading-relaxed line-clamp-3 text-pretty">
+                                                        {modelOption.description}
+                                                    </span>
+                                                ) : null}
+                                            </div>
+                                        </SelectItem>
+                                    ))}
+                                </div>
+                            </SelectGroup>
+                        </div>
+                    ))}
+                </div>
             </SelectContent>
         </Select>
     );
