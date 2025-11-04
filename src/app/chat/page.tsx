@@ -101,7 +101,7 @@ export default function ChatStreaming() {
 function Story({ threadId }: { threadId: string }) {
   const [selectedModel, setSelectedModel] = useState(chatModel[0].id);
   const [prompt, setPrompt] = useState("");
-  const [url, setUrl] = useState("");
+  const [urls, setUrls] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const {
     results: messages,
@@ -138,13 +138,13 @@ function Story({ threadId }: { threadId: string }) {
       threadId, 
       prompt: text, 
       model: selectedModel,
-      url: url || "",
+      urls: urls.length > 0 ? urls : undefined,
 
     }).catch(() => {
     });
     
     setPrompt("");
-    setUrl(""); 
+    setUrls([]); 
     
     if (isFirstMessage && !titleUpdatedRef.current) {
       titleUpdatedRef.current = true;
@@ -194,7 +194,7 @@ function Story({ threadId }: { threadId: string }) {
           }}
         >
           <div className="flex-1 relative max-w-[80%] mx-auto">
-            <div className="relative rounded-t-xl rounded-b-none border border-border/60 bg-background/90 backdrop-blur-md shadow-xl shadow-black/10 dark:shadow-black/20 ring-1 ring-border/20">
+            <div className="relative rounded-t-2xl rounded-b-none border border-border/60 bg-background/90 backdrop-blur-md shadow-xl shadow-black/10 dark:shadow-black/20 ring-1 ring-border/20">
               <Textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
@@ -204,7 +204,7 @@ function Story({ threadId }: { threadId: string }) {
                     onSendClicked();
                   }
                 }}
-                className="w-full min-h-[140px] max-h-[400px] rounded-t-xl rounded-b-none border-0 bg-transparent placeholder:text-muted-foreground/60 resize-none pr-14 pb-12 pt-5 px-5 text-base focus-visible:ring-0 focus-visible:ring-offset-0 leading-relaxed"
+                className="w-full min-h-[140px] max-h-[400px] rounded-t-2xl rounded-b-none border-0 bg-transparent placeholder:text-muted-foreground/60 resize-none pr-14 pb-12 pt-5 px-5 text-base focus-visible:ring-0 focus-visible:ring-offset-0 leading-relaxed"
                 placeholder={
                   messages.length > 0
                     ? "Continue the conversation..."
@@ -214,31 +214,6 @@ function Story({ threadId }: { threadId: string }) {
               />
               <div className="absolute bottom-4 left-4 flex items-center gap-2">
                 <ChatModelSelector model={selectedModel} setModel={setSelectedModel} />
-                {url && (
-                  <div className="relative rounded-lg border border-border/60 bg-card/40 p-1.5 flex items-center gap-1.5 ml-1">
-                    <div className="relative w-8 h-8 rounded-md overflow-hidden bg-muted flex-shrink-0">
-                      <Image
-                        src={url}
-                        alt="Uploaded image"
-                        fill
-                        className="object-cover"
-                        sizes="32px"
-                        unoptimized
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setUrl("")}
-                      className="h-5 w-5 rounded-md hover:bg-destructive/10 hover:text-destructive flex-shrink-0"
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </div>
-                )}
-              </div>
-              <div className="absolute bottom-4 right-4 flex items-center gap-2">
                 <UploadButton
                   endpoint="imageUploader"
                   disabled={isStreaming || isUploading}
@@ -246,7 +221,8 @@ function Story({ threadId }: { threadId: string }) {
                   onClientUploadComplete={(res) => {
                     setIsUploading(false);
                     if (res && res.length > 0) {
-                      setUrl(res[0].ufsUrl);
+                      const newUrls = res.map((file) => file.ufsUrl);
+                      setUrls((prev) => [...prev, ...newUrls]);
                     }
                   }}
                   onUploadError={() => {
@@ -278,6 +254,35 @@ function Story({ threadId }: { threadId: string }) {
                     allowedContent : "hidden",
                   }}
                 />
+                {urls.length > 0 && (
+                  <div className="flex items-center gap-1.5 ml-1 flex-wrap">
+                    {urls.map((url, index) => (
+                      <div key={index} className="relative rounded-lg border border-border/60 bg-card/40 p-1.5 flex items-center gap-1.5">
+                        <div className="relative w-8 h-8 rounded-md overflow-hidden bg-muted flex-shrink-0">
+                          <Image
+                            src={url}
+                            alt={`Uploaded image ${index + 1}`}
+                            fill
+                            className="object-cover"
+                            sizes="32px"
+                            unoptimized
+                          />
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setUrls((prev) => prev.filter((_, i) => i !== index))}
+                          className="h-5 w-5 rounded-md hover:bg-destructive/10 hover:text-destructive flex-shrink-0"
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div className="absolute bottom-4 right-4 flex items-center gap-2">
                 {isStreaming ? (
                   <Button
                     type="button"

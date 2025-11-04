@@ -39,10 +39,13 @@ export default function ChatModelSelector({ model, setModel }: { model: string; 
             <SelectTrigger
                 size="sm"
                 className={cn(
-                    "h-8 px-3 text-xs font-medium rounded-xl border border-sidebar-border/60",
-                    "bg-gradient-to-r from-sidebar/70 via-sidebar/60 to-sidebar/70 text-sidebar-foreground/90 shadow-sm backdrop-blur",
-                    "transition-all duration-300 hover:border-sidebar-border/40 hover:shadow-md data-[state=open]:shadow-lg data-[state=open]:border-sidebar-primary/50",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-primary/40 focus-visible:border-sidebar-primary/60"
+                    "h-8 px-3 text-xs font-medium rounded-xl",
+                    "border-0 !border-0 bg-transparent !bg-transparent",
+                    "dark:bg-transparent dark:hover:bg-transparent",
+                    "text-sidebar-foreground/90",
+                    "shadow-none !shadow-none",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-primary/40",
+                    "focus-visible:border-0 focus-visible:!border-0"
                 )}
             >
                 <SelectValue>

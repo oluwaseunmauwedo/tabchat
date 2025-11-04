@@ -142,10 +142,10 @@ export function Sidepanel() {
                 <SidebarGroup>
                     <SidebarGroupContent>
                         <SidebarMenu className="space-y-1">
-                            <SidebarMenuButton onClick={() => router.push("/generate")} className="rounded-md" tooltip="Text to Image" data-active={pathname === "/generate"}>
+                            <SidebarMenuButton onClick={() => router.push("/generate")} className="rounded-md justify-center text-center bg-sidebar-accent/50 hover:bg-sidebar-accent" tooltip="Text to Image" data-active={pathname === "/generate"}>
                                 <span>Generate Images</span>
                             </SidebarMenuButton>
-                            <SidebarMenuButton onClick={() => router.push("/gallery")} className="rounded-md" tooltip="Image to Image" data-active={pathname === "/gallery"}>
+                            <SidebarMenuButton onClick={() => router.push("/gallery")} className="rounded-md justify-center text-center bg-sidebar-accent/50 hover:bg-sidebar-accent" tooltip="Image to Image" data-active={pathname === "/gallery"}>
                                 <span>Gallery</span>
                             </SidebarMenuButton>
 

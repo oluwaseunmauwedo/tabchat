@@ -10,21 +10,31 @@ import { paginationOptsValidator } from "convex/server";
 
 
 export const initiateAsyncStreaming = mutation({
-    args: { prompt: v.string(), threadId: v.string() , model: v.string() , url: v.optional(v.string()) },
-    handler: async (ctx, { prompt, threadId, model, url }) => {
+    args: { prompt: v.string(), threadId: v.string() , model: v.string() , urls: v.optional(v.array(v.string())) },
+    handler: async (ctx, { prompt, threadId, model, urls }) => {
       await authorizeThreadAccess(ctx, threadId);
+      const content: Array<{ type: "image"; image: string; mimeType: string } | { type: "text"; text: string }> = [];
+      
+      // Add all image parts
+      if (urls && urls.length > 0) {
+        urls.forEach((url) => {
+          content.push({ type: "image", image: url, mimeType: "image/png" });
+        });
+      }
+      
+      // Add text part
+      content.push({ type: "text", text: prompt });
+      
       const { messageId } = await chatBetterAgent(model).saveMessage(ctx, {
         threadId,
         //prompt,
         skipEmbeddings: true,
         message: {
           role: "user",
-          content: url
-            ? [{type: "image", image: url, mimeType: "image/png"}, { type: "text", text: prompt }]
-            : [{ type: "text", text: prompt }],
+          content: content,
         },
       //  metadata: {
-      //   fileIds: [url ? url : ""],
+      //   fileIds: urls || [],
       //  },
       });
       await ctx.scheduler.runAfter(0, internal.chatStreaming.streamAsync, {
