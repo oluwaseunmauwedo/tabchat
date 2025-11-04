@@ -2,7 +2,7 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { internalAction } from "./_generated/server";
 import { components, internal } from "./_generated/api";
-import { agent, chatBetterAgent } from "./chat/agent";
+import {  chatBetterAgent } from "./chat/agent";
 import { authorizeThreadAccess } from "./thread";
 import { abortStream, listUIMessages, syncStreams, vStreamArgs } from "@convex-dev/agent";
 import { paginationOptsValidator } from "convex/server";
@@ -10,8 +10,9 @@ import { paginationOptsValidator } from "convex/server";
 
 
 export const initiateAsyncStreaming = mutation({
-    args: { prompt: v.string(), threadId: v.string() , model: v.string() , urls: v.optional(v.array(v.string())) },
-    handler: async (ctx, { prompt, threadId, model, urls }) => {
+    args: { prompt: v.string(), threadId: v.string() , model: v.string() , urls: v.optional(v.array(v.string())) , webSearch: v.boolean() },
+    
+    handler: async (ctx, { prompt, threadId, model, urls, webSearch }) => {
       await authorizeThreadAccess(ctx, threadId);
       const content: Array<{ type: "image"; image: string; mimeType: string } | { type: "text"; text: string }> = [];
       
@@ -25,7 +26,7 @@ export const initiateAsyncStreaming = mutation({
       // Add text part
       content.push({ type: "text", text: prompt });
       
-      const { messageId } = await chatBetterAgent(model).saveMessage(ctx, {
+      const { messageId } = await chatBetterAgent(model, webSearch).saveMessage(ctx, {
         threadId,
         //prompt,
         skipEmbeddings: true,
@@ -41,14 +42,15 @@ export const initiateAsyncStreaming = mutation({
         threadId,
         promptMessageId: messageId,
         model,
+        webSearch,
       });
     },
   });
   
   export const streamAsync = internalAction({
-    args: { promptMessageId: v.string(), threadId: v.string(), model: v.string() },
-    handler: async (ctx, { promptMessageId, threadId, model }) => {
-      const result = await chatBetterAgent(model).streamText(
+    args: { promptMessageId: v.string(), threadId: v.string(), model: v.string() , webSearch: v.boolean() },
+    handler: async (ctx, { promptMessageId, threadId, model, webSearch }) => {
+      const result = await chatBetterAgent(model, webSearch).streamText(
         ctx,
         { threadId },
         { promptMessageId },

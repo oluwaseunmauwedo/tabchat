@@ -1,4 +1,17 @@
 export const chatModel = [ {
+    id: "google/gemini-2.5-flash",
+    name: "Gemini 2.5 Flash",
+    description: "Google's ultra-fast multimodal model with excellent speed.",
+}, {
+    id: "google/gemini-2.0-flash",
+    name: "Gemini 2.0 Flash",
+    description: "Fast and efficient Gemini model for rapid responses.",
+},
+{
+    id: "google/gemini-2.5-pro",
+    name: "Gemini 2.5 Pro",
+    description: "Advanced Gemini model with superior reasoning and capabilities.",
+}, {
     id: "openai/gpt-5-mini",
     name: "GPT-5 Mini",
     description: "Fast and efficient version of GPT-5, optimized for speed and cost.",
@@ -39,19 +52,6 @@ export const chatModel = [ {
     id : "anthropic/claude-3.5-haiku",
     name : "Claude 3.5 Haiku",
     description : "Claude 3.5 Haiku is a fast and efficient model for quick responses.",
-}, {
-    id: "google/gemini-2.5-flash",
-    name: "Gemini 2.5 Flash",
-    description: "Google's ultra-fast multimodal model with excellent speed.",
-}, {
-    id: "google/gemini-2.0-flash",
-    name: "Gemini 2.0 Flash",
-    description: "Fast and efficient Gemini model for rapid responses.",
-},
-{
-    id: "google/gemini-2.5-pro",
-    name: "Gemini 2.5 Pro",
-    description: "Advanced Gemini model with superior reasoning and capabilities.",
 }, {
     id: "zai/glm-4.6",
     name: "GLM 4.6",

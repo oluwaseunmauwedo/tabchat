@@ -3,8 +3,9 @@ import { action, ActionCtx, mutation, MutationCtx, query, QueryCtx } from "./_ge
 import { components } from "./_generated/api";
 import { createThread, getThreadMetadata, saveMessage, vMessage } from "@convex-dev/agent";
 import {v} from "convex/values";
-import { agent } from "./chat/agent";
 import { z } from "zod";
+import {agent} from "./chat/agent";
+
 
 export const listThreads = query({
     args : {

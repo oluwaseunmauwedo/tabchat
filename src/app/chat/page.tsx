@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Square, ArrowUp, Paperclip, X } from "lucide-react";
+import { Square, ArrowUp, Paperclip, X, Globe } from "lucide-react";
 import ChatModelSelector from "@/components/chat-model-selector";
 import { UploadButton } from "@/utils/uploadthing";
 import Image from "next/image";
@@ -42,6 +42,8 @@ import {
   SourcesTrigger,
   Source,
 } from "@/components/ai-elements/sources";
+import { ToolUIPart } from "ai";
+import { WebSearchParts } from "@/components/web-search-parts";
 
 
 export default function ChatStreaming() {
@@ -71,7 +73,7 @@ export default function ChatStreaming() {
         <div className="flex flex-col h-screen">
           <div className="flex-1 flex flex-col overflow-hidden">
             {threadId ? (
-              <Story threadId={threadId} />
+              <Chat threadId={threadId} />
             ) : (
               <div className="flex-1 flex items-center justify-center">
                 <div className="text-center space-y-3">
@@ -98,11 +100,12 @@ export default function ChatStreaming() {
   );
 }
 
-function Story({ threadId }: { threadId: string }) {
+export function Chat({ threadId }: { threadId: string }) {
   const [selectedModel, setSelectedModel] = useState(chatModel[0].id);
   const [prompt, setPrompt] = useState("");
   const [urls, setUrls] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [webSearch, setWebSearch] = useState(false);
   const {
     results: messages,
     status,
@@ -139,7 +142,7 @@ function Story({ threadId }: { threadId: string }) {
       prompt: text, 
       model: selectedModel,
       urls: urls.length > 0 ? urls : undefined,
-
+      webSearch,
     }).catch(() => {
     });
     
@@ -153,6 +156,8 @@ function Story({ threadId }: { threadId: string }) {
       }, 1000);
     }
   }
+  
+
 
   function handleAbort() {
     const order = messages.find((m) => m.status === "streaming")?.order ?? 0;
@@ -214,6 +219,20 @@ function Story({ threadId }: { threadId: string }) {
               />
               <div className="absolute bottom-4 left-4 flex items-center gap-2">
                 <ChatModelSelector model={selectedModel} setModel={setSelectedModel} />
+                <button
+                  type="button"
+                  onClick={() => setWebSearch(!webSearch)}
+                  className={cn(
+                    "inline-flex h-9 w-9 items-center justify-center rounded-lg transition-all cursor-pointer",
+                    webSearch
+                      ? "text-primary bg-primary/10 hover:bg-primary/20 border border-primary/30"
+                      : "text-muted-foreground bg-muted/60 hover:bg-muted hover:text-foreground border border-border/40 shadow-sm hover:shadow-md",
+                    "hover:scale-105 active:scale-95"
+                  )}
+                  title={webSearch ? "Disable Web Search" : "Enable Web Search"}
+                >
+                  <Globe className="h-4 w-4" />
+                </button>
                 <UploadButton
                   endpoint="imageUploader"
                   disabled={isStreaming || isUploading}
@@ -326,6 +345,9 @@ function ChatMessage({ message }: { message: UIMessage }) {
   const reasoningParts = message.parts.filter((p) => p.type === "reasoning");
 
   const textParts = message.parts.filter((p) => p.type === "text");
+  const webSearchParts = message.parts.filter(
+    (p): p is ToolUIPart => p.type === "tool-webSearch",
+  );
 
   if (isUser) {
     return (
@@ -386,6 +408,13 @@ function ChatMessage({ message }: { message: UIMessage }) {
               </SourcesContent>
             ))}
           </Sources>
+        )}
+
+        {webSearchParts.length > 0 && (
+          <WebSearchParts
+            parts={webSearchParts}
+            messageKey={message.key}
+          />
         )}
 
         {reasoningParts.length > 0 && (
@@ -474,3 +503,4 @@ function TextParts({
     </div>
   );
 }
+
