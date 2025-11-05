@@ -17,10 +17,10 @@ export const webSearchTool = createTool({
       numResults: 3,
     });
     return results.map(result => ({
-      title: result.title,
-      url: result.url,
-      content: result, // take just the first 1000 characters
-      publishedDate: result.publishedDate,
-    }));
+        title: result.title,
+        url: result.url,
+        content: result, // take just the first 1000 characters
+        publishedDate: result.publishedDate,
+      }));
   },
 });

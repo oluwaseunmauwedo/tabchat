@@ -20,6 +20,6 @@ export const agent = new Agent(components.agent, {
       tools: webSearch ? {
         webSearch: webSearchTool,
       } : undefined,
-      stopWhen: [stepCountIs(3)], // stop after 3 steps
+      stopWhen: webSearch ? [stepCountIs(2)] : undefined, // stop after 3 steps
     });
   }

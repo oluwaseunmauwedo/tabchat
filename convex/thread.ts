@@ -89,6 +89,9 @@ export const createNewThread = mutation({
       return true;
     },
   })  
+
+  
+
   
   export async function authorizeThreadAccess(
     ctx: QueryCtx | MutationCtx | ActionCtx,

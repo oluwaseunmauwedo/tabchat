@@ -39,7 +39,7 @@ export default function ChatModelSelector({ model, setModel }: { model: string; 
             <SelectTrigger
                 size="sm"
                 className={cn(
-                    "h-8 px-3 text-xs font-medium rounded-xl",
+                    "h-7 md:h-8 px-2 md:px-3 text-[10px] sm:text-xs font-medium rounded-xl",
                     "border-0 !border-0 bg-transparent !bg-transparent",
                     "dark:bg-transparent dark:hover:bg-transparent",
                     "text-sidebar-foreground/90",
@@ -49,7 +49,7 @@ export default function ChatModelSelector({ model, setModel }: { model: string; 
                 )}
             >
                 <SelectValue>
-                    <span className="truncate max-w-[12rem] text-sidebar-foreground/90">
+                    <span className="truncate max-w-[6rem] sm:max-w-[8rem] md:max-w-[12rem] text-sidebar-foreground/90 text-[10px] sm:text-xs">
                         {selectedModelData?.name || "Select model"}
                     </span>
                 </SelectValue>
