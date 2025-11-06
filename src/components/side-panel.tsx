@@ -105,16 +105,17 @@ export function Sidepanel() {
             className="sp-sidebar overflow-hidden"
         >
             <SidebarRail />
-            <SidebarHeader className="sp-header relative">
-                <div className="flex items-center justify-center px-2 relative">
-                    <SidebarTrigger className="h-7 w-7 rounded-md hover:bg-muted transition-colors absolute left-2" />
-                    <h1 className="text-lg sm:text-lg py-3 lg:text-xl xl:text-2xl font-bold tracking-tight leading-tight text-center">
+            <SidebarHeader className="sp-header">
+                <div className="flex items-center justify-between px-2 py-3 gap-2">
+                    <SidebarTrigger className="h-8 w-8 rounded-md hover:bg-muted transition-colors flex-shrink-0" />
+                    <h1 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold tracking-tight leading-tight flex-1 text-center">
                         <Link href="/">
                           <span className="bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent">
                             tab.chat
                           </span>
                         </Link>
                     </h1>
+                    <div className="w-8 flex-shrink-0" />
                 </div>
             </SidebarHeader>
   
@@ -196,7 +197,7 @@ export function Sidepanel() {
                                                 <SidebarMenuButton
                                                     onClick={() => handleThreadClick(thread._id)}
                                                     className={cn(
-                                                        "rounded-md justify-start h-auto py-2 px-3 group/item relative",
+                                                        "rounded-md justify-start h-auto py-2.5 pr-3 pl-3 group/item relative w-full",
                                                         isActive && "bg-primary/10 text-primary font-medium"
                                                     )}
                                                     tooltip={displayText}
@@ -207,8 +208,9 @@ export function Sidepanel() {
                                                                 e.stopPropagation();
                                                                 handleDeleteThread(thread._id);
                                                             }}
-                                                            className="absolute left-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/item:opacity-100 transition-opacity flex items-center justify-center w-5 h-5 rounded hover:bg-destructive/10 hover:text-destructive text-muted-foreground cursor-pointer z-10"
+                                                            className="absolute right-2 top-1/2 -translate-y-1/2 flex h-6 w-6 items-center justify-center rounded transition-colors text-muted-foreground cursor-pointer z-10 hover:bg-destructive/10 hover:text-destructive"
                                                             title="Delete thread"
+                                                            aria-label="Delete thread"
                                                             role="button"
                                                             tabIndex={0}
                                                             onKeyDown={(e) => {
@@ -222,11 +224,11 @@ export function Sidepanel() {
                                                             <Trash2 className="h-3.5 w-3.5" />
                                                         </div>
                                                     )}
-                                                    <MessageSquare className={cn(
-                                                        "h-4 w-4 mr-2 flex-shrink-0 transition-all",
-                                                        !isActive && "ml-0 group-hover/item:ml-6"
-                                                    )} />
-                                                    <span className="truncate text-sm flex-1 text-left">
+                                                    <MessageSquare className="h-4 w-4 mr-2 flex-shrink-0" />
+                                                    <span className={cn(
+                                                        "truncate text-sm flex-1 text-left",
+                                                        !isActive && "pr-7"
+                                                    )}>
                                                         {displayText}
                                                     </span>
                                                 </SidebarMenuButton>

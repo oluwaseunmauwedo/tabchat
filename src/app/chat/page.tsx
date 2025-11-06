@@ -165,11 +165,11 @@ export function Chat({ threadId }: { threadId: string }) {
   }
 
   return (
-    <div className="flex-1 flex flex-col max-w-5xl mx-auto w-full px-4 md:px-6 overflow-hidden min-h-0">
+    <div className="flex-1 flex flex-col w-full overflow-hidden min-h-0">
 
       <Conversation className="flex-1 min-h-0">
         <ConversationContent className="pt-4 pb-6">
-          <div className="max-w-[95%] sm:max-w-[90%] md:max-w-[80%] mx-auto space-y-3">
+          <div className="w-full max-w-[95%] sm:max-w-[88%] md:max-w-3xl mx-auto space-y-3">
             {status === "CanLoadMore" && (
               <div className="flex justify-center">
                 <Button
@@ -198,7 +198,7 @@ export function Chat({ threadId }: { threadId: string }) {
             onSendClicked();
           }}
         >
-          <div className="flex-1 relative max-w-[95%] sm:max-w-[90%] md:max-w-[80%] mx-auto">
+          <div className="flex-1 relative w-full max-w-[95%] sm:max-w-[88%] md:max-w-3xl mx-auto">
             <div className="relative rounded-t-2xl rounded-b-none border border-border/60 bg-background/90 backdrop-blur-xl shadow-xl shadow-black/10 dark:shadow-black/20 ring-1 ring-border/20">
               <Textarea
                 value={prompt}
@@ -209,7 +209,7 @@ export function Chat({ threadId }: { threadId: string }) {
                     onSendClicked();
                   }
                 }}
-                className="w-full min-h-[120px] max-h-[400px] rounded-t-2xl rounded-b-none border-0 bg-transparent placeholder:text-muted-foreground/60 resize-none pr-12 md:pr-14 pb-16 md:pb-12 pt-5 px-4 md:px-5 text-base focus-visible:ring-0 focus-visible:ring-offset-0 leading-relaxed"
+                className="w-full min-h-[140px] max-h-[400px] rounded-t-2xl rounded-b-none border-0 bg-transparent placeholder:text-muted-foreground/60 resize-none pr-12 md:pr-14 pb-16 md:pb-12 pt-5 px-4 md:px-5 text-base focus-visible:ring-0 focus-visible:ring-offset-0 leading-relaxed"
                 placeholder={
                   messages.length > 0
                     ? "Continue the conversation..."

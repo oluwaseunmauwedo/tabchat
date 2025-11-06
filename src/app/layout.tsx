@@ -56,7 +56,7 @@ export default function RootLayout({
 
               <Sidepanel  />
               <SidebarFloatingTrigger />
-              <SidebarInset className="h-screen overflow-auto">
+              <SidebarInset className="h-screen overflow-y-auto overflow-x-hidden">
                 {children}
               </SidebarInset>
             </SidebarProvider>

@@ -251,6 +251,29 @@
     scroll-behavior: smooth;
   }
 
+  /* Prevent main containers from scrolling */
+  html {
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  body {
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* Prevent body scroll and layout shift when sheet is open */
+  body[data-scroll-locked] {
+    overflow: hidden !important;
+    padding-right: 0 !important;
+  }
+
+  /* Lock the sidebar wrapper */
+  [data-slot="sidebar-wrapper"] {
+    height: 100vh;
+    overflow: hidden;
+  }
+
   /* Apply custom scrollbar only to the main scrollable container */
   [data-sidebar="inset"] {
     scrollbar-width: thin;
