@@ -10,6 +10,7 @@ const PROVIDER_LABELS: Record<string, string> = {
     zai: "Zai",
     deepseek: "DeepSeek",
     perplexity: "Perplexity",
+    moonshotai: "Moonshot AI",
 };
 
 function getProvider(id: string) {

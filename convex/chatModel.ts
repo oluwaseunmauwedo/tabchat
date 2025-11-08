@@ -93,6 +93,14 @@ export const chatModel = [ {
     id : "minimax/minimax-m2",
     name : "Minimax M2",
     description : "MiniMax-M2 redefines efficiency for agents. It is a compact, fast, and cost-effective MoE model",
+} , {
+    id : "moonshotai/kimi-k2-thinking",
+    name : "Kimik2 Thinking",
+    description : "Kimi K2 Thinking is an advanced open-source thinking model by Moonshot AI",
+} , {
+    id : "moonshotai/kimi-k2-thinking-turbo",
+    name : "Kimik2 Thinking Turbo",
+    description : "Kimi K2 Thinking Turbo is an advanced open-source thinking model by Moonshot AI",
 }
 
 ]
