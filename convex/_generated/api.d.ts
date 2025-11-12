@@ -12,7 +12,6 @@ import type * as auth from "../auth.js";
 import type * as chat_agent from "../chat/agent.js";
 import type * as chat_config from "../chat/config.js";
 import type * as chat_usage from "../chat/usage.js";
-import type * as chat_webSearch from "../chat/webSearch.js";
 import type * as chatModel from "../chatModel.js";
 import type * as chatStreaming from "../chatStreaming.js";
 import type * as http from "../http.js";
@@ -42,7 +41,6 @@ declare const fullApi: ApiFromModules<{
   "chat/agent": typeof chat_agent;
   "chat/config": typeof chat_config;
   "chat/usage": typeof chat_usage;
-  "chat/webSearch": typeof chat_webSearch;
   chatModel: typeof chatModel;
   chatStreaming: typeof chatStreaming;
   http: typeof http;

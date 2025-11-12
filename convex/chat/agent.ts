@@ -1,8 +1,8 @@
 import { components } from "../_generated/api";
 import { Agent, stepCountIs } from "@convex-dev/agent";
 import { defaultConfig } from "./config";
-import { webSearchTool } from "./webSearch";
 import { usageHandler } from "./usage";
+import { webSearch } from "@exalabs/ai-sdk";
 
 export const agent = new Agent(components.agent, {
     name: "tabchat",
@@ -12,7 +12,7 @@ export const agent = new Agent(components.agent, {
 
   export function chatBetterAgent(
     model: string,
-    webSearch: boolean,
+    webSearchTool: boolean,
   ) {
     return new Agent(components.agent, {
       name: "tabchat",
@@ -23,10 +23,9 @@ export const agent = new Agent(components.agent, {
       },
       textEmbeddingModel: "google/text-multilingual-embedding-002",
       instructions: "You are an tabchat ai assistant that can help with tasks",
-      tools: webSearch ? {
-        webSearch: webSearchTool,
+      tools: webSearchTool ? {
+        webSearch: webSearch(),
       } : undefined,
-      stopWhen: webSearch ? [stepCountIs(2)] : undefined, // stop after 3 steps
+      stopWhen:[stepCountIs(3)], // stop after 3 steps
     });
   }
-

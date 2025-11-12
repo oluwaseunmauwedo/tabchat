@@ -26,6 +26,9 @@ importers:
       '@convex-dev/r2':
         specifier: ^0.7.3
         version: 0.7.3(@standard-schema/spec@1.0.0)(convex-svelte@0.0.11(convex@1.28.2(react@19.2.0))(svelte@5.43.2))(convex@1.28.2(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(svelte@5.43.2)(typescript@5.9.3)(zod@4.1.12)
+      '@exalabs/ai-sdk':
+        specifier: ^1.0.4
+        version: 1.0.4(ai@5.0.86(zod@4.1.12))
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.66.0(react@19.2.0))
@@ -778,6 +781,11 @@ packages:
   '@eslint/plugin-kit@0.4.1':
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@exalabs/ai-sdk@1.0.4':
+    resolution: {integrity: sha512-BftMFleSjgGFvCOEmVryqAFHyNq4hvZ38xlb882i2iPXRzt/jHjPUwrcQ3rOoAkCN/iSID/2p7syP1C0+Lmi+A==}
+    peerDependencies:
+      ai: ^5.0.83
 
   '@floating-ui/core@1.7.3':
     resolution: {integrity: sha512-sGnvb5dmrJaKEZ+LDIpguvdX3bDlEllmv4/ClQ9awcmCZrlx5jQyyMWFM5kBI+EyNOCDDiKk8il0zeuX3Zlg/w==}
@@ -5889,6 +5897,11 @@ snapshots:
     dependencies:
       '@eslint/core': 0.17.0
       levn: 0.4.1
+
+  '@exalabs/ai-sdk@1.0.4(ai@5.0.86(zod@4.1.12))':
+    dependencies:
+      ai: 5.0.86(zod@4.1.12)
+      zod: 3.25.76
 
   '@floating-ui/core@1.7.3':
     dependencies:
