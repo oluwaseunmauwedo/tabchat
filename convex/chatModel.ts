@@ -17,15 +17,15 @@ export const chatModel = [{
     description: "An upgraded version of GPT-5 that adapts thinking time more precisely to the question to spend more time on complex questions and respond more quickly to simpler tasks.",
 }, {
     id: "openai/gpt-5.1-instant",
-    name: "GPT-5.1 Thinking Mini",
+    name: "GPT-5.1 Instant",
     description: "A smaller version of GPT-5.1 Thinking, optimized for speed and cost.",
 }, {
     id: "openai/gpt-5.1-codex",
-    name: "GPT-5.1 Thinking Nano",
+    name: "GPT-5.1 Codex",
     description: "GPT-5.1-Codex is a version of GPT-5.1 optimized for agentic coding tasks in Codex or similar environments.",
 }, {
     id: "openai/gpt-5.1-codex-mini",
-    name: "GPT-5.1 Codex Mini",
+    name: "GPT-5.1 Codex Nano",
     description: "A smaller version of GPT-5.1 Codex, optimized for speed and cost.",
 }, {
     id: "openai/gpt-5-mini",
